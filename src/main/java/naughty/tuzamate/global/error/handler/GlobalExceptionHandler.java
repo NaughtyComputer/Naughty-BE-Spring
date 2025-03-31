@@ -27,16 +27,17 @@ public class GlobalExceptionHandler {
     }
 
     // 일반 예외 처리 (NullPointerException, IllegalArgumentException 등)
-    @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<CustomResponse<?>> handle(RuntimeException e) {
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<CustomResponse<?>> handle(Exception e) {
+        log.error("Exception: {}", e.getMessage());
         BaseErrorCode code = GeneralErrorCode.INTERNAL_SERVER_ERROR_500;
+
         CustomResponse<?> response = CustomResponse.onFail(code);
 
         return new ResponseEntity<>(response, code.getStatus());
     }
 
     // 요청 검증 실패 (DTO + @Valid)
-    /*
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<CustomResponse<?>> handle(MethodArgumentNotValidException e) {
         String errorMessage = e.getBindingResult().getFieldErrors().stream()
@@ -46,12 +47,11 @@ public class GlobalExceptionHandler {
         CustomResponse<?> response = CustomResponse.builder()
                 .isSuccess(false)
                 .status(HttpStatus.BAD_REQUEST)
-                .code("VALIDATION_ERROR")
+                .code("VALIDATION_ERROR - 요청 데이터 검증 실패")
                 .message(errorMessage)
                 .build();
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
-    */
 }
 
