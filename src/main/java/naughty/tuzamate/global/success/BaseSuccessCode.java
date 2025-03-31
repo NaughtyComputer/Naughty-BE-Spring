@@ -1,4 +1,10 @@
 package naughty.tuzamate.global.success;
 
-public class BaseSuccessCode {
+import org.springframework.http.HttpStatus;
+
+public interface BaseSuccessCode {
+
+    HttpStatus getStatus();
+    String getCode();
+    String getMessage();
 }

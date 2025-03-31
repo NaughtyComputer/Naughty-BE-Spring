@@ -1,4 +1,57 @@
 package naughty.tuzamate.global.error.handler;
 
+import lombok.extern.slf4j.Slf4j;
+import naughty.tuzamate.global.apiPayload.CustomResponse;
+import naughty.tuzamate.global.error.BaseErrorCode;
+import naughty.tuzamate.global.error.GeneralErrorCode;
+import naughty.tuzamate.global.error.exception.CustomException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.stream.Collectors;
+
+@Slf4j
+@RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    // 커스텀 예외 처리
+    @ExceptionHandler(CustomException.class)
+    public ResponseEntity<CustomResponse<?>> handle(CustomException e) {
+        BaseErrorCode code = e.getCode();  // 에러코드 가져오기
+        CustomResponse<?> response = CustomResponse.onFail(code);  // 실패 응답 생성
+
+        return new ResponseEntity<>(response, code.getStatus());
+    }
+
+    // 일반 예외 처리 (NullPointerException, IllegalArgumentException 등)
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<CustomResponse<?>> handle(RuntimeException e) {
+        BaseErrorCode code = GeneralErrorCode.INTERNAL_SERVER_ERROR_500;
+        CustomResponse<?> response = CustomResponse.onFail(code);
+
+        return new ResponseEntity<>(response, code.getStatus());
+    }
+
+    // 요청 검증 실패 (DTO + @Valid)
+    /*
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<CustomResponse<?>> handle(MethodArgumentNotValidException e) {
+        String errorMessage = e.getBindingResult().getFieldErrors().stream()
+                .map(err -> err.getField() + ": " + err.getDefaultMessage())
+                .collect(Collectors.joining(", "));
+
+        CustomResponse<?> response = CustomResponse.builder()
+                .isSuccess(false)
+                .status(HttpStatus.BAD_REQUEST)
+                .code("VALIDATION_ERROR")
+                .message(errorMessage)
+                .build();
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+    */
 }
+
