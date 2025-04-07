@@ -1,17 +1,17 @@
-package naughty.tuzamate.mapping;
+package naughty.tuzamate.domain.mapping;
 
 import jakarta.persistence.*;
 import lombok.*;
-import naughty.tuzamate.post.domain.Post;
-import naughty.tuzamate.user.domain.User;
+import naughty.tuzamate.domain.post.entity.Post;
+import naughty.tuzamate.domain.user.domain.User;
 
 @Entity
-@Table(name = "post_like")
+@Table(name = "post_scrap")
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-public class PostLike {
+public class PostScrap {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

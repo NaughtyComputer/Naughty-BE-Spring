@@ -1,4 +1,4 @@
-package naughty.tuzamate.user.domain;
+package naughty.tuzamate.domain.user.domain;
 
 
 import jakarta.persistence.*;
