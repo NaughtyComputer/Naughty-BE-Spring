@@ -1,4 +1,4 @@
-package naughty.tuzamate.domain.mapping;
+package naughty.tuzamate.domain.postScrap.entity;
 
 import jakarta.persistence.*;
 import lombok.*;

@@ -20,8 +20,6 @@ public class PostController {
     private final PostCommandService postCommandService;
     private final PostQueryService postQueryService;
 
-    // successCode 수정할 것
-
     @PostMapping("")
     public CustomResponse<PostResDTO.CreatePostResponseDTO> createPost(
             @RequestBody PostReqDTO.CreatePostRequestDTO reqDTO) {
@@ -58,5 +56,47 @@ public class PostController {
         PostResDTO.DeletePostResponseDTO resDTO = postCommandService.deletePost(postId);
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, resDTO);
+    }
+
+    // PostLike
+    @PostMapping("/{postId}/likes")
+    public CustomResponse<String> increaseLike(
+            @PathVariable Long postId,
+            @RequestParam Long userId
+    ) {
+        String message = postCommandService.postLike(postId, userId);
+
+        return CustomResponse.onSuccess(GeneralSuccessCode.CREATED, message);
+    }
+
+    @DeleteMapping("/{postId}/likes")
+    public CustomResponse<String> deleteLike(
+            @PathVariable Long postId,
+            @RequestParam Long userId
+    ) {
+        String message = postCommandService.deleteLike(postId, userId);
+
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK, message);
+    }
+
+    // PostScrap
+    @PostMapping("/{postId}/scraps")
+    public CustomResponse<String> postScrap(
+            @PathVariable Long postId,
+            @RequestParam Long userId
+    ) {
+        String message = postCommandService.postScrap(postId, userId);
+
+        return CustomResponse.onSuccess(GeneralSuccessCode.CREATED, message);
+    }
+
+    @DeleteMapping("/{postId}/scraps")
+    public CustomResponse<String> deleteScrap(
+            @PathVariable Long postId,
+            @RequestParam Long userId
+    ) {
+        String message = postCommandService.deleteScrap(postId, userId);
+
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK, message);
     }
 }
