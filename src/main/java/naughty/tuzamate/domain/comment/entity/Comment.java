@@ -39,4 +39,8 @@ public class Comment extends BaseTimeEntity {
     // 댓글이 삭제되면 대댓글도 같이 자동으로 삭제 설정 및 부모 변경이 자식에게 전파됨
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> children = new ArrayList<>();
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
 }

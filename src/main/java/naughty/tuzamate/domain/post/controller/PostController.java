@@ -59,5 +59,4 @@ public class PostController {
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, resDTO);
     }
-
 }
