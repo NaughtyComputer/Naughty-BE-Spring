@@ -1,10 +1,10 @@
-package naughty.tuzamate.comment.domain;
+package naughty.tuzamate.domain.comment.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 import naughty.tuzamate.global.BaseTimeEntity;
-import naughty.tuzamate.post.domain.Post;
-import naughty.tuzamate.user.domain.User;
+import naughty.tuzamate.domain.post.entity.Post;
+import naughty.tuzamate.domain.user.domain.User;
 
 import java.util.ArrayList;
 import java.util.List;

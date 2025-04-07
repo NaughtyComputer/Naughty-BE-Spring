@@ -1,9 +1,9 @@
-package naughty.tuzamate.post.domain;
+package naughty.tuzamate.domain.post.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
 import naughty.tuzamate.global.BaseTimeEntity;
-import naughty.tuzamate.user.domain.User;
+import naughty.tuzamate.domain.user.domain.User;
 
 @Entity
 @Table(name = "post")
@@ -21,9 +21,18 @@ public class Post extends BaseTimeEntity {
 
     private String content;
 
-    private Long like_num;
+    @Column(name = "like_num")
+    private Long likeNum;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
 }
