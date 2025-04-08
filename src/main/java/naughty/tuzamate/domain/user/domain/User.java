@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import naughty.tuzamate.global.BaseTimeEntity;
 import naughty.tuzamate.domain.user.enums.SocialType;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user")
@@ -19,7 +20,7 @@ public class User extends BaseTimeEntity {
     private Long id;
 
     private String password;
-
+  
     private Long gender;
 
     private Long age;
@@ -69,7 +70,6 @@ public class User extends BaseTimeEntity {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
     }*/
-
 
 
 }
