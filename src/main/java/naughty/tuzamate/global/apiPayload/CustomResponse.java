@@ -53,6 +53,10 @@ public class CustomResponse<T> {
                 .build();
     }
 
+    public static <T> CustomResponse<T> onSuccess(T result) {
+        return new CustomResponse<>(true, HttpStatus.OK, String.valueOf(HttpStatus.OK.value()), HttpStatus.OK.getReasonPhrase(), result);
+    }
+
     // CustomException 이 컨트롤러에서 발생하면, 이 메서드로 예외 처리를 위임
     public static CustomResponse<?> onFail(BaseErrorCode errorCode) {
         return CustomResponse.builder()
@@ -61,6 +65,10 @@ public class CustomResponse<T> {
                 .code(errorCode.getCode())
                 .message(errorCode.getMessage())
                 .build();
+    }
+
+    public static <T> CustomResponse<T> onFail(HttpStatus status, String code, String message, boolean isSuccess, T result) {
+        return new CustomResponse<>(isSuccess, status, code, message , result);
     }
 
 }

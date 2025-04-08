@@ -2,12 +2,9 @@ package naughty.tuzamate.domain.user.domain;
 
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import naughty.tuzamate.global.BaseTimeEntity;
-
+import naughty.tuzamate.domain.user.enums.SocialType;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,12 +19,16 @@ public class User extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String password;
+  
     private Long gender;
 
     private Long age;
 
     @Column(name = "investment_experience")
     private boolean experience;
+
+    private String email;
 
     private String nickname;
 
@@ -54,6 +55,21 @@ public class User extends BaseTimeEntity {
     private Long expected_loss;
 
     private String purpose;
+
+    private String role;
+
+    private SocialType socialType;
+
+   /* @Column(nullable = false)
+    private String accessToken;
+
+    @Column(nullable = false)
+    private String refreshToken;
+
+    public void updateTokens(String accessToken, String refreshToken) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+    }*/
 
 
 }
