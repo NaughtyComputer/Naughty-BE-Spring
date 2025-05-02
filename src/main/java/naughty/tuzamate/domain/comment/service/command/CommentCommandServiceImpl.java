@@ -9,7 +9,7 @@ import naughty.tuzamate.domain.comment.repository.CommentRepository;
 import naughty.tuzamate.domain.post.entity.Post;
 import naughty.tuzamate.domain.post.repository.PostRepository;
 import naughty.tuzamate.domain.user.domain.User;
-import naughty.tuzamate.domain.user.domain.repository.UserRepository;
+import naughty.tuzamate.domain.user.repository.UserRepository;
 import naughty.tuzamate.global.error.BaseErrorCode;
 import naughty.tuzamate.global.error.GeneralErrorCode;
 import naughty.tuzamate.global.error.exception.CustomException;
