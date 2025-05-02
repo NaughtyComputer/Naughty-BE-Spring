@@ -11,7 +11,7 @@ import naughty.tuzamate.domain.postLike.repository.PostLikeRepository;
 import naughty.tuzamate.domain.postScrap.entity.PostScrap;
 import naughty.tuzamate.domain.postScrap.repository.PostScrapRepository;
 import naughty.tuzamate.domain.user.domain.User;
-import naughty.tuzamate.domain.user.domain.repository.UserRepository;
+import naughty.tuzamate.domain.user.repository.UserRepository;
 import naughty.tuzamate.global.error.GeneralErrorCode;
 import naughty.tuzamate.global.error.exception.CustomException;
 import org.springframework.stereotype.Service;
