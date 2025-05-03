@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import naughty.tuzamate.global.BaseTimeEntity;
 import naughty.tuzamate.domain.post.entity.Post;
-import naughty.tuzamate.domain.user.domain.User;
+import naughty.tuzamate.domain.user.entity.User;
 
 import java.util.ArrayList;
 import java.util.List;

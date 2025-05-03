@@ -78,7 +78,7 @@ import io.jsonwebtoken.security.Keys;
 
 import lombok.extern.slf4j.Slf4j;
 import naughty.tuzamate.auth.jwt.error.JwtErrorCode;
-import naughty.tuzamate.domain.user.domain.User;
+import naughty.tuzamate.domain.user.entity.User;
 import org.springframework.stereotype.Component;
 import org.springframework.beans.factory.annotation.Value;
 import naughty.tuzamate.auth.jwt.error.exception.AuthException;

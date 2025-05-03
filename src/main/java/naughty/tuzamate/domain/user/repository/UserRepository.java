@@ -1,6 +1,6 @@
 package naughty.tuzamate.domain.user.repository;
 
-import naughty.tuzamate.domain.user.domain.User;
+import naughty.tuzamate.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

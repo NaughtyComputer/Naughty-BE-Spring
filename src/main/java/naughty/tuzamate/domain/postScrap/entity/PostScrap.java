@@ -3,7 +3,7 @@ package naughty.tuzamate.domain.postScrap.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import naughty.tuzamate.domain.post.entity.Post;
-import naughty.tuzamate.domain.user.domain.User;
+import naughty.tuzamate.domain.user.entity.User;
 
 @Entity
 @Table(name = "post_scrap")

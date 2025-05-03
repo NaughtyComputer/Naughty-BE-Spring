@@ -2,7 +2,7 @@ package naughty.tuzamate.domain.postScrap.repository;
 
 import naughty.tuzamate.domain.post.entity.Post;
 import naughty.tuzamate.domain.postScrap.entity.PostScrap;
-import naughty.tuzamate.domain.user.domain.User;
+import naughty.tuzamate.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface PostScrapRepository extends JpaRepository<PostScrap, Long> {

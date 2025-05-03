@@ -2,7 +2,7 @@ package naughty.tuzamate.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import naughty.tuzamate.auth.jwt.JwtProvider;
-import naughty.tuzamate.domain.user.domain.User;
+import naughty.tuzamate.domain.user.entity.User;
 import naughty.tuzamate.domain.user.error.UserErrorCode;
 import naughty.tuzamate.domain.user.error.exception.UserCustomException;
 import naughty.tuzamate.domain.user.dto.UserRequestDTO;
