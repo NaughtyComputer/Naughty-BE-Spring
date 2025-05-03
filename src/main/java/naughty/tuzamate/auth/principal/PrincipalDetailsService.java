@@ -1,7 +1,7 @@
 package naughty.tuzamate.auth.principal;
 
 import lombok.RequiredArgsConstructor;
-import naughty.tuzamate.domain.user.domain.User;
+import naughty.tuzamate.domain.user.entity.User;
 import naughty.tuzamate.domain.user.error.UserErrorCode;
 import naughty.tuzamate.domain.user.error.exception.UserCustomException;
 import naughty.tuzamate.domain.user.repository.UserRepository;

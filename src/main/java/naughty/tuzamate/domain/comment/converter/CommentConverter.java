@@ -4,10 +4,9 @@ import naughty.tuzamate.domain.comment.dto.CommentReqDTO;
 import naughty.tuzamate.domain.comment.dto.CommentResDTO;
 import naughty.tuzamate.domain.comment.entity.Comment;
 import naughty.tuzamate.domain.post.entity.Post;
-import naughty.tuzamate.domain.user.domain.User;
+import naughty.tuzamate.domain.user.entity.User;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

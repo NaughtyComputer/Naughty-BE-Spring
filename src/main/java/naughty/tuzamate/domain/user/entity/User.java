@@ -1,11 +1,10 @@
-package naughty.tuzamate.domain.user.domain;
+package naughty.tuzamate.domain.user.entity;
 
 
 import jakarta.persistence.*;
 import lombok.*;
 import naughty.tuzamate.global.BaseTimeEntity;
 import naughty.tuzamate.domain.user.enums.SocialType;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user")

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import naughty.tuzamate.auth.dto.kakao.KakaoOAuth2DTO;
 import naughty.tuzamate.auth.jwt.JwtProvider;
-import naughty.tuzamate.domain.user.domain.User;
+import naughty.tuzamate.domain.user.entity.User;
 import naughty.tuzamate.domain.user.dto.UserResponseDTO;
 import naughty.tuzamate.domain.user.enums.SocialType;
 import naughty.tuzamate.domain.user.error.UserErrorCode;
