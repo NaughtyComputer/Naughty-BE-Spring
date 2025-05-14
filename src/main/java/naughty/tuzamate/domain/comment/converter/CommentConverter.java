@@ -13,13 +13,17 @@ import java.util.stream.Collectors;
 public class CommentConverter {
 
     // CreateCommentRequestDTO -> Comment Entity
-    public static Comment toComment(CommentReqDTO.CreateCommentRequestDTO reqDTO, User user, Post post, Comment comment) {
-        return Comment.builder()
+    public static Comment toComment(CommentReqDTO.CreateCommentRequestDTO reqDTO, User user, Post post, Comment parent) {
+        Comment comment =  Comment.builder()
                 .content(reqDTO.content())
                 .user(user)
                 .post(post)
-                .parent(comment)
+                .parent(parent)
                 .build();
+
+        post.addComment(comment);
+
+        return comment;
     }
 
     // Comment Entity -> CreateCommentRequestDTO
