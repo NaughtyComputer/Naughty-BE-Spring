@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "deposit")
+@Table(name = "savings")
 @Getter
 @Setter
 @Builder
