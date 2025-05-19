@@ -18,7 +18,7 @@ public class KakaoController {
     @GetMapping("/oauth2/tuzamate/kakao")
     // code는 카카오에서 주는 것 (디버깅으로 확인 가능)
     public CustomResponse<?> KakaoLogin(@RequestParam("code") String code) {
-
+        System.out.println(code);
         return CustomResponse.onSuccess(oAuth2Service.login("kakao", code));
     }
 }

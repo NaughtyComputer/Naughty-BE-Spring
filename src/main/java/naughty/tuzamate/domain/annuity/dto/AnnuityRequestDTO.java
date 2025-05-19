@@ -10,14 +10,14 @@ public class AnnuityRequestDTO {
     public record AnnuityProductDTO(
             String kor_co_nm,
             String fin_prdt_nm,
-            String pnsnKindNm,
-            String prdtTypeNm,
-            Double avgPrftRate,
-            Double guarRate,
-            Double btrmPrftRate1,
-            String joinWay,
-            String saleCo,
-            String saleStrtDay
+            String pnsn_kind_nm,
+            String prdt_type_nm,
+            Double avg_prft_rate,
+            Double guar_rate,
+            Double btrm_prft_rate_1,
+            String join_way,
+            String sale_co,
+            String sale_strt_day
     ) {}
 
     @Builder
