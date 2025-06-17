@@ -7,7 +7,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
-@EnableScheduling // 스케줄링 사용을 위해서
 public class WebConfig {
 
     @Bean
