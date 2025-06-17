@@ -5,6 +5,7 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import naughty.tuzamate.auth.hantu.service.ApiTokenService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -18,9 +19,11 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 @Component
 @Slf4j
+@ConditionalOnProperty(name = "hantu.token.schedule.enabled", havingValue = "true")
+// @ConditionalOnProperty를 사용하여 개발 중에는 이 클래스가 실행되지 않도록 한다.
 public class ApiTokenRefreshScheduler {
 
-    /* private final ApiTokenService apiTokenService;
+     private final ApiTokenService apiTokenService;
 
     @PostConstruct
     public void firstToken() {
@@ -42,5 +45,5 @@ public class ApiTokenRefreshScheduler {
         } else {
             log.error("API AccessToken 갱신 실패");
         }
-    }*/
+    }
 }
