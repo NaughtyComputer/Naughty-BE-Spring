@@ -52,7 +52,7 @@ public class ApiTokenService {
 
             ResponseEntity<ResponseTuzaAccessTokenDto> response = restTemplate.postForEntity(tokenUrl, request, ResponseTuzaAccessTokenDto.class);
 
-            if (response.getStatusCode() == HttpStatus.OK) {
+            if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
                 apiTokenStore.saveAccessToken(response.getBody().getAccessToken());
                 log.info("HanTU Access Token 갱신 완료");
                 return true;
