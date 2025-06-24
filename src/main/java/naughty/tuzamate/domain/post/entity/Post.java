@@ -2,8 +2,13 @@ package naughty.tuzamate.domain.post.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import naughty.tuzamate.domain.comment.entity.Comment;
+import naughty.tuzamate.domain.postLike.entity.PostLike;
 import naughty.tuzamate.global.BaseTimeEntity;
 import naughty.tuzamate.domain.user.entity.User;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "post")
@@ -28,6 +33,9 @@ public class Post extends BaseTimeEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Comment> comments = new ArrayList<>();
+
     public void updateTitle(String title) {
         this.title = title;
     }
@@ -42,5 +50,10 @@ public class Post extends BaseTimeEntity {
 
     public void decreaseLike() {
         this.likeNum = (this.likeNum != null && this.likeNum > 0) ? this.likeNum - 1 : 0;
+    }
+
+    public void addComment(Comment comment) {
+        comments.add(comment);
+        comment.setPost(this);
     }
 }
