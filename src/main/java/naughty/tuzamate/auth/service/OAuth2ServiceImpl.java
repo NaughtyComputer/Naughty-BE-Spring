@@ -2,6 +2,7 @@ package naughty.tuzamate.auth.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import naughty.tuzamate.auth.constant.OAUTH_URL;
 import naughty.tuzamate.auth.dto.kakao.KakaoOAuth2DTO;
 import naughty.tuzamate.auth.jwt.JwtProvider;
 import naughty.tuzamate.domain.user.entity.User;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.Optional;
 
@@ -40,6 +42,27 @@ public class OAuth2ServiceImpl implements OAuth2Service {
 
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
+
+    private final String response_type = "code";
+    private final String grant_type = "authorization_code";
+
+
+    @Override
+    public String getCode() {
+        WebClient.create()
+                .get()
+                .uri(getAuthUrl());
+
+        return getAuthUrl();
+    }
+
+    private String getAuthUrl() {
+        return OAUTH_URL.KAKAO_AUTH_URL.getUrl()
+                + "?response_type=" + response_type
+                + "&client_id=" + clientId
+                + "&redirect_uri=" + redirectURI;
+
+    }
 
     @Override
     public UserResponseDTO.UserTokenDTO login(String provider, String code) {
@@ -100,7 +123,7 @@ public class OAuth2ServiceImpl implements OAuth2Service {
 
         try {
             return om.readValue(response2.getBody(), KakaoOAuth2DTO.KakaoProfile.class);
-        } catch(Exception e) {
+        } catch (Exception e) {
             throw new UserCustomException(UserErrorCode.OAUTH_USER_INFO_FAIL);
         }
     }
