@@ -112,6 +112,10 @@ public class JwtProvider {
         return createToken(user, this.refreshExpiration);
     }
 
+    public long getRefreshExpiration() {
+        return refreshExpiration;
+    }
+
     public String createToken(User member, long expiration) {
         Instant issuedAt = Instant.now(); // 만들어진 시간을 현재 시간으로
         Instant expiredAt = issuedAt.plusMillis(expiration); // 만들어진 시간에 시간을 추가해 만료일 만들기

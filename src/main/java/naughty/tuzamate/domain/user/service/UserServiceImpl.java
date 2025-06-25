@@ -2,15 +2,22 @@ package naughty.tuzamate.domain.user.service;
 
 import lombok.RequiredArgsConstructor;
 import naughty.tuzamate.auth.jwt.JwtProvider;
+import naughty.tuzamate.auth.service.RefreshTokenService;
 import naughty.tuzamate.domain.user.entity.User;
 import naughty.tuzamate.domain.user.error.UserErrorCode;
 import naughty.tuzamate.domain.user.error.exception.UserCustomException;
 import naughty.tuzamate.domain.user.dto.UserRequestDTO;
 import naughty.tuzamate.domain.user.dto.UserResponseDTO;
 import naughty.tuzamate.domain.user.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 
 @Service
 @Transactional
@@ -20,6 +27,7 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final BCryptPasswordEncoder encoder;
     private final JwtProvider jwtProvider;
+    private final RefreshTokenService refreshTokenService;
 
     @Override
     public UserResponseDTO.UserTokenDTO login(UserRequestDTO.UserLoginDTO loginDTO) {
@@ -31,9 +39,18 @@ public class UserServiceImpl implements UserService{
             throw new UserCustomException(UserErrorCode.USER_PASSWORD_INCORRECT);
         }
 
+        String accessToken = jwtProvider.createAccessToken(user);
+        String refreshToken = jwtProvider.createRefreshToken(user);
+        long refreshExpiration = jwtProvider.getRefreshExpiration();
+
+        Instant issuedAt = Instant.now();
+        Instant refreshExpire = issuedAt.plusMillis(refreshExpiration);
+
         return UserResponseDTO.UserTokenDTO.builder()
-                .accessToken(jwtProvider.createAccessToken(user))
-                .refreshToken(jwtProvider.createRefreshToken(user))
+                .userId(user.getId())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .refreshTokenExpire(Date.from(refreshExpire))
                 .build();
     }
 
