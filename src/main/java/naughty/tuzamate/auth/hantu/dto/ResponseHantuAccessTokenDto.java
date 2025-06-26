@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 @Builder
-public class ResponseTuzaAccessTokenDto {
+public class ResponseHantuAccessTokenDto {
 
     private String accessToken;
     private String tokenType;

@@ -1,9 +1,8 @@
 package naughty.tuzamate.auth.hantu.service;
 
-import naughty.tuzamate.auth.hantu.ApiTokenInMemoryStore;
-import naughty.tuzamate.auth.hantu.dto.ResponseTuzaAccessTokenDto;
-import naughty.tuzamate.auth.hantu.repository.ApiTokenStore;
-import org.assertj.core.api.Assertions;
+import naughty.tuzamate.auth.hantu.HantuApiTokenInMemoryStore;
+import naughty.tuzamate.auth.hantu.dto.ResponseHantuAccessTokenDto;
+import naughty.tuzamate.auth.hantu.repository.HantuApiTokenStore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +13,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 
@@ -29,13 +27,13 @@ class ApiTokenServiceTest {
     @Mock
     private RestTemplate restTemplate;
 
-    private ApiTokenService apiTokenService;
-    private ApiTokenStore apiTokenStore;
+    private HantuApiTokenService apiTokenService;
+    private HantuApiTokenStore apiTokenStore;
 
     @BeforeEach
     void before() {
-        apiTokenStore = new ApiTokenInMemoryStore();
-        apiTokenService = new ApiTokenService(apiTokenStore, restTemplate, "test-app-key", "test-secret-key", "test-url");
+        apiTokenStore = new HantuApiTokenInMemoryStore();
+        apiTokenService = new HantuApiTokenService(apiTokenStore, restTemplate, "test-app-key", "test-secret-key", "test-url");
     }
 
     @Test
@@ -49,11 +47,11 @@ class ApiTokenServiceTest {
     void 액세스토큰갱신성공() {
 
         // given
-        ResponseTuzaAccessTokenDto accessToeknResponse = ResponseTuzaAccessTokenDto.builder().accessToken("new-access-token").build();
+        ResponseHantuAccessTokenDto accessToeknResponse = ResponseHantuAccessTokenDto.builder().accessToken("new-access-token").build();
 
         // when
-        when(restTemplate.postForEntity(anyString(), any(), eq(ResponseTuzaAccessTokenDto.class)))
-                .thenReturn((ResponseEntity<ResponseTuzaAccessTokenDto>) new ResponseEntity<>(accessToeknResponse, HttpStatus.OK));
+        when(restTemplate.postForEntity(anyString(), any(), eq(ResponseHantuAccessTokenDto.class)))
+                .thenReturn((ResponseEntity<ResponseHantuAccessTokenDto>) new ResponseEntity<>(accessToeknResponse, HttpStatus.OK));
 
         boolean result = apiTokenService.refreshAccessToken();
 
