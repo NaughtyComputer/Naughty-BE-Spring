@@ -5,10 +5,30 @@ import naughty.tuzamate.domain.user.entity.User;
 
 public class ProfileConverter {
 
-    public static ProfileResponseDTO toProfileResponseDTO(User updateUser) {
+    public static ProfileResponseDTO.updateProfileResponse toProfileResponseDTO(User updateUser) {
 
-        return new ProfileResponseDTO(
-                updateUser.getNickname()
-        );
+        return ProfileResponseDTO.updateProfileResponse.builder()
+                .nickname(updateUser.getNickname())
+                .build();
+    }
+
+    public static ProfileResponseDTO.getProfileResponse from(User user) {
+
+        return ProfileResponseDTO.getProfileResponse.builder()
+                .age(user.getAge())
+                .experience(user.isExperience())
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .funding_situation(user.getFunding_situation())
+                .income(user.getIncome())
+                .stability(user.getStability())
+                .source(user.getSource())
+                .type(user.getType())
+                .proportion(user.getProportion())
+                .period(user.getPeriod())
+                .expected_income(user.getExpected_income())
+                .expected_loss(user.getExpected_loss())
+                .purpose(user.getPurpose())
+                .build();
     }
 }
