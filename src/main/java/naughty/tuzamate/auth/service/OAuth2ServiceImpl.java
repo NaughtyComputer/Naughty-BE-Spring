@@ -22,6 +22,8 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -42,6 +44,7 @@ public class OAuth2ServiceImpl implements OAuth2Service {
 
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
+    private final RefreshTokenService refreshTokenService;
 
     private final String response_type = "code";
     private final String grant_type = "authorization_code";
@@ -95,9 +98,18 @@ public class OAuth2ServiceImpl implements OAuth2Service {
                         .socialType(socialType)
                         .build()));
 
+        String accessToken = jwtProvider.createAccessToken(user);
+        String refreshToken = jwtProvider.createRefreshToken(user);
+        long refreshExpiration = jwtProvider.getRefreshExpiration();
+
+        Instant issuedAt = Instant.now();
+        Instant refreshExpire = issuedAt.plusMillis(refreshExpiration);
+
         return UserResponseDTO.UserTokenDTO.builder()
-                .accessToken(jwtProvider.createAccessToken(user))
-                .refreshToken(jwtProvider.createRefreshToken(user))
+                .userId(user.getId())
+                .accessToken(accessToken)
+                .refreshToken(refreshToken)
+                .refreshTokenExpire(Date.from(refreshExpire))
                 .build();
     }
 
