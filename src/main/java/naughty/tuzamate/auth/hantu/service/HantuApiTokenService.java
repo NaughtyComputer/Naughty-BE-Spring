@@ -1,8 +1,8 @@
 package naughty.tuzamate.auth.hantu.service;
 
 import lombok.extern.slf4j.Slf4j;
-import naughty.tuzamate.auth.hantu.dto.ResponseTuzaAccessTokenDto;
-import naughty.tuzamate.auth.hantu.repository.ApiTokenStore;
+import naughty.tuzamate.auth.hantu.dto.ResponseHantuAccessTokenDto;
+import naughty.tuzamate.auth.hantu.repository.HantuApiTokenStore;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -13,9 +13,9 @@ import java.util.Map;
 
 @Service
 @Slf4j
-public class ApiTokenService {
+public class HantuApiTokenService {
 
-    private final ApiTokenStore apiTokenStore;
+    private final HantuApiTokenStore apiTokenStore;
     private final RestTemplate restTemplate;
 
     //    @Value("${tuza.api.APP_KEY}")
@@ -27,7 +27,7 @@ public class ApiTokenService {
     //    @Value("${tuza.api.URL}")
     private final String tokenUrl;
 
-    public ApiTokenService(ApiTokenStore apiTokenStore, RestTemplate restTemplate, @Value("${tuza.api.APP_KEY}") String appKey, @Value("${tuza.api.APP_SECRET_KEY}") String appSecret, @Value("${tuza.api.URL}") String tokenUrl) {
+    public HantuApiTokenService(HantuApiTokenStore apiTokenStore, RestTemplate restTemplate, @Value("${tuza.api.APP_KEY}") String appKey, @Value("${tuza.api.APP_SECRET_KEY}") String appSecret, @Value("${tuza.api.URL}") String tokenUrl) {
         this.apiTokenStore = apiTokenStore;
         this.restTemplate = restTemplate;
         this.appKey = appKey;
@@ -50,7 +50,7 @@ public class ApiTokenService {
 
             HttpEntity<Map<String, String>> request = new HttpEntity<>(body, httpHeaders);
 
-            ResponseEntity<ResponseTuzaAccessTokenDto> response = restTemplate.postForEntity(tokenUrl, request, ResponseTuzaAccessTokenDto.class);
+            ResponseEntity<ResponseHantuAccessTokenDto> response = restTemplate.postForEntity(tokenUrl, request, ResponseHantuAccessTokenDto.class);
 
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
                 apiTokenStore.saveAccessToken(response.getBody().getAccessToken());
