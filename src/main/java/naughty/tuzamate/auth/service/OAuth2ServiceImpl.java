@@ -46,22 +46,18 @@ public class OAuth2ServiceImpl implements OAuth2Service {
     private final JwtProvider jwtProvider;
     private final RefreshTokenService refreshTokenService;
 
-    private final String response_type = "code";
-    private final String grant_type = "authorization_code";
+    private static final String RESPONSE_TYPE = "code";
+    private static final String GRANT_TYPE = "authorization_code";
 
 
     @Override
     public String getCode() {
-        WebClient.create()
-                .get()
-                .uri(getAuthUrl());
-
         return getAuthUrl();
     }
 
     private String getAuthUrl() {
         return OAUTH_URL.KAKAO_AUTH_URL.getUrl()
-                + "?response_type=" + response_type
+                + "?response_type=" + RESPONSE_TYPE
                 + "&client_id=" + clientId
                 + "&redirect_uri=" + redirectURI;
 
@@ -76,6 +72,8 @@ public class OAuth2ServiceImpl implements OAuth2Service {
             throw new UserCustomException(UserErrorCode.UNSUPPORTED_OAUTH_TYPE);
         }
     }
+
+
 
     private UserResponseDTO.UserTokenDTO loginWithKakao(String code) {
 
