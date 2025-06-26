@@ -32,7 +32,7 @@ public class UserController {
 
         UserResponseDTO.UserTokenDTO loginResult = userService.login(loginDTO);
         refreshTokenService.saveRefreshToken(loginResult.getUserId(), loginResult.getRefreshToken(),
-                LocalDateTime.ofInstant(Instant.ofEpochMilli(loginResult.getRefreshTokenExpire().getTime()), ZoneId.systemDefault()));
+                LocalDateTime.ofInstant(Instant.ofEpochMilli(loginResult.getRefreshTokenExpire().getTime()), ZoneId.of("Asia/Seoul")));
 
         return CustomResponse.onSuccess(loginResult);
     }
