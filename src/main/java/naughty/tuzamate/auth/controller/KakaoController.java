@@ -40,8 +40,8 @@ public class KakaoController {
         refreshTokenService.saveRefreshToken(
                 kakaoToken.getUserId(),
                 kakaoToken.getRefreshToken(),
-                LocalDateTime.ofInstant(Instant.ofEpochMilli(kakaoToken.getRefreshTokenExpire().getTime()), ZoneId.systemDefault())
-        );
+                LocalDateTime.ofInstant(Instant.ofEpochMilli(kakaoToken.getRefreshTokenExpire().getTime()), ZoneId.of("Asia/Seoul")));
+
 
         return CustomResponse.onSuccess(kakaoToken);
     }
