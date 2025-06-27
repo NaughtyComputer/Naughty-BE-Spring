@@ -1,6 +1,6 @@
 package naughty.tuzamate.auth.hantu.repository;
 
-public interface ApiTokenStore {
+public interface HantuApiTokenStore {
 
     void saveAccessToken(String accessToken);
 

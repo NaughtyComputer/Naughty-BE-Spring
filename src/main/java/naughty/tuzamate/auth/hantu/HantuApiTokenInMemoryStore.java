@@ -1,6 +1,6 @@
 package naughty.tuzamate.auth.hantu;
 
-import naughty.tuzamate.auth.hantu.repository.ApiTokenStore;
+import naughty.tuzamate.auth.hantu.repository.HantuApiTokenStore;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
@@ -9,7 +9,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 @Component
 @Primary
-public class ApiTokenInMemoryStore implements ApiTokenStore {
+public class HantuApiTokenInMemoryStore implements HantuApiTokenStore {
 
     private String accessToken;
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
