@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import naughty.tuzamate.domain.stock.entity.NasdaqStockCode;
 import naughty.tuzamate.domain.stock.entity.StockCode;
-import naughty.tuzamate.domain.stock.repository.NasdaqCodeRepository;
-import naughty.tuzamate.domain.stock.repository.StockCodeRepository;
+import naughty.tuzamate.domain.stock.repository.code.NasdaqCodeRepository;
+import naughty.tuzamate.domain.stock.repository.code.StockCodeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +25,7 @@ import java.util.zip.ZipInputStream;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class StockService {
+public class StockCodeService {
 
     private final StockCodeRepository stockCodeRepository;
     private final NasdaqCodeRepository nasdaqCodeRepository;
