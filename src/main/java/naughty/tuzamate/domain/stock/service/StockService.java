@@ -1,6 +1,7 @@
 package naughty.tuzamate.domain.stock.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import naughty.tuzamate.domain.stock.entity.NasdaqStockCode;
 import naughty.tuzamate.domain.stock.entity.StockCode;
 import naughty.tuzamate.domain.stock.repository.NasdaqCodeRepository;
@@ -23,6 +24,7 @@ import java.util.zip.ZipInputStream;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class StockService {
 
     private final StockCodeRepository stockCodeRepository;
@@ -39,7 +41,7 @@ public class StockService {
         String nasdaqZipUrl = "https://new.real.download.dws.co.kr/common/master/nasmst.cod.zip";
 
 
-        /*String kospiZipPath = "C:\\Users\\namju\\Desktop\\기타 프젝\\주식 저장소\\kospi_code.mst.zip";
+      /*  String kospiZipPath = "C:\\Users\\namju\\Desktop\\기타 프젝\\주식 저장소\\kospi_code.mst.zip";
         String kosdaqZipPath = "C:\\Users\\namju\\Desktop\\기타 프젝\\주식 저장소\\kosdaq_code.mst.zip";
         String nasdaqZipPath = "C:\\Users\\namju\\Desktop\\기타 프젝\\주식 저장소\\nasmst.cod.zip";
 
@@ -84,7 +86,7 @@ public class StockService {
 
         download(nasdaqZipUrl, nasdaqZipPath.toString());
         unzip(nasdaqZipPath.toString(), extractDir.toString());
-        List<String> nasdaqStockCodes = extractNasdaqStockCode(extractDir.resolve("nasmst.cod").toString());
+        List<String> nasdaqStockCodes = extractNasdaqStockCode(extractDir.resolve("NASMST.CODd").toString());
         saveNasdaqStockCodes(nasdaqStockCodes);
 
     }
@@ -109,6 +111,8 @@ public class StockService {
      */
 
     public void download(String urlInfo, String destFile) throws IOException {
+        
+        log.info("다운로드 시작: {}", urlInfo);
 
         URL url = new URL(urlInfo);
         ReadableByteChannel rbc = Channels.newChannel(url.openStream());
@@ -118,6 +122,8 @@ public class StockService {
 
         fos.close();
         rbc.close();
+
+        log.info("다운로드 완료: {}", destFile);
 
     }
 
