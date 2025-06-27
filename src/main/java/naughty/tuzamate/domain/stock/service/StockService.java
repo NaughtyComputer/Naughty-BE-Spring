@@ -86,7 +86,7 @@ public class StockService {
 
         download(nasdaqZipUrl, nasdaqZipPath.toString());
         unzip(nasdaqZipPath.toString(), extractDir.toString());
-        List<String> nasdaqStockCodes = extractNasdaqStockCode(extractDir.resolve("NASMST.CODd").toString());
+        List<String> nasdaqStockCodes = extractNasdaqStockCode(extractDir.resolve("NASMST.COD").toString());
         saveNasdaqStockCodes(nasdaqStockCodes);
 
     }
