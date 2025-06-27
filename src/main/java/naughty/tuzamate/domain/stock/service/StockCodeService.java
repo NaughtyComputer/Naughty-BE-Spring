@@ -34,7 +34,7 @@ public class StockCodeService {
      // 한국투자증권의 자료를 이용해서 코스피, 코스닥, 나스닥 주식 코드를 DB에 저장하는 메소드
     public void codeSaveProcess() throws IOException{
 
-        stockCodeRepository.deleteAll();
+        stockCodeRepository.deleteAllInBatch();
 
         String kospiZipUrl = "https://new.real.download.dws.co.kr/common/master/kospi_code.mst.zip";
         String kosdaqZipUrl = "https://new.real.download.dws.co.kr/common/master/kosdaq_code.mst.zip";

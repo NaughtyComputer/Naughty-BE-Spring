@@ -105,7 +105,7 @@ public class NasdaqService {
     public void saveNasdaqStocksInfo() {
         List<NasdaqStockCode> stockCodeList = nasdaqCodeRepository.findAll();
 
-        nasdaqStockInfoRepository.deleteAll();
+        nasdaqStockInfoRepository.deleteAllInBatch();
 
         for (NasdaqStockCode stockCode : stockCodeList) {
             try {
