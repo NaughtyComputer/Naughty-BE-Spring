@@ -7,9 +7,9 @@ import lombok.Getter;
 @Builder
 public class ResponseHantuAccessTokenDto {
 
-    private String accessToken;
-    private String tokenType;
-    private Long expiresIn;
-    private String accessTokenTokenExpired;
+    private String access_token;
+    private String token_type;
+    private Long expires_in;
+    private String access_token_token_expired;
 
 }
