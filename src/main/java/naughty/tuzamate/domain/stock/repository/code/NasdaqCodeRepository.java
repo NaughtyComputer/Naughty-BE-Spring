@@ -1,4 +1,4 @@
-package naughty.tuzamate.domain.stock.repository;
+package naughty.tuzamate.domain.stock.repository.code;
 
 import naughty.tuzamate.domain.stock.entity.NasdaqStockCode;
 import org.springframework.data.jpa.repository.JpaRepository;

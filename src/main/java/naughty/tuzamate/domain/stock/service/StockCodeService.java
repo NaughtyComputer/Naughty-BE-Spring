@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import naughty.tuzamate.domain.stock.entity.NasdaqStockCode;
 import naughty.tuzamate.domain.stock.entity.StockCode;
-import naughty.tuzamate.domain.stock.repository.NasdaqCodeRepository;
-import naughty.tuzamate.domain.stock.repository.StockCodeRepository;
+import naughty.tuzamate.domain.stock.repository.code.NasdaqCodeRepository;
+import naughty.tuzamate.domain.stock.repository.code.StockCodeRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +25,7 @@ import java.util.zip.ZipInputStream;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class StockService {
+public class StockCodeService {
 
     private final StockCodeRepository stockCodeRepository;
     private final NasdaqCodeRepository nasdaqCodeRepository;
@@ -34,7 +34,7 @@ public class StockService {
      // 한국투자증권의 자료를 이용해서 코스피, 코스닥, 나스닥 주식 코드를 DB에 저장하는 메소드
     public void codeSaveProcess() throws IOException{
 
-        stockCodeRepository.deleteAll();
+        stockCodeRepository.deleteAllInBatch();
 
         String kospiZipUrl = "https://new.real.download.dws.co.kr/common/master/kospi_code.mst.zip";
         String kosdaqZipUrl = "https://new.real.download.dws.co.kr/common/master/kosdaq_code.mst.zip";
