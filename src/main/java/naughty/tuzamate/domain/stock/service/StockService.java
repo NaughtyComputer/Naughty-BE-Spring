@@ -111,19 +111,21 @@ public class StockService {
      */
 
     public void download(String urlInfo, String destFile) throws IOException {
-        
+
         log.info("다운로드 시작: {}", urlInfo);
 
         URL url = new URL(urlInfo);
-        ReadableByteChannel rbc = Channels.newChannel(url.openStream());
 
-        FileOutputStream fos = new FileOutputStream(destFile);
-        fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+        try (ReadableByteChannel rbc = Channels.newChannel(url.openStream());
+            FileOutputStream fos = new FileOutputStream(destFile)){
+            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 
-        fos.close();
-        rbc.close();
+            log.info("다운로드 완료: {}", destFile);
+        }
 
-        log.info("다운로드 완료: {}", destFile);
+
+
+
 
     }
 
@@ -132,9 +134,38 @@ public class StockService {
         File dir = new File(destDir);
 
         if (!dir.exists()) dir.mkdir();
-        byte[] buffer = new byte[1024];
 
-        ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFilePath));
+        Path destDirPath = dir.toPath().normalize();
+
+        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFilePath))) {
+            ZipEntry zipEntry;
+            byte[] buffer = new byte[8192];
+
+            while ((zipEntry = zis.getNextEntry()) != null) {
+                Path entryPath = destDirPath.resolve(zipEntry.getName()).normalize();
+
+                if (!entryPath.startsWith(destDirPath)) {
+                    throw new IOException("Invalid zip entry: " + zipEntry.getName());
+                }
+
+                File newFile = entryPath.toFile();
+
+                try (FileOutputStream fos = new FileOutputStream(newFile)) {
+                        int len;
+                        while ((len = zis.read(buffer)) > 0) {
+                            fos.write(buffer, 0, len);
+                        }
+                    }
+                }
+                zis.closeEntry();
+            }
+        }
+
+//        byte[] buffer = new byte[1024];
+
+
+
+        /*ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFilePath));
         ZipEntry zipEntry = zis.getNextEntry();
 
         while (zipEntry != null) {
@@ -150,32 +181,30 @@ public class StockService {
         }
 
         zis.closeEntry();
-        zis.close();
-    }
+        zis.close();*/
 
     public List<String> extractStockCode(String txtFilePath) throws IOException {
 
         List<String> codes = new ArrayList<>();
-        BufferedReader br = new BufferedReader(new FileReader(txtFilePath));
-
-        String line;
-        // 평범한 주식이 아닌 것은 제외시킨다
-        while ((line = br.readLine()) != null) {
-            if (line.startsWith("F")) continue;
-            else if (line.startsWith("Q")) {
-                String code = line.substring(0, 7).trim();
-                codes.add(code);
-            }
-            else if (line.startsWith("J")) {
-                String code = line.substring(1, 7).trim();
-                codes.add(code);
-            }
-            else if (line.length() >= 6) {
-                String code = line.substring(0, 6).trim();
-                codes.add(code);
+        try(BufferedReader br = new BufferedReader(new FileReader(txtFilePath))) {
+            String line;
+            // 평범한 주식이 아닌 것은 제외시킨다
+            while ((line = br.readLine()) != null) {
+                if (line.startsWith("F")) continue;
+                else if (line.startsWith("Q")) {
+                    String code = line.substring(0, 7).trim();
+                    codes.add(code);
+                }
+                else if (line.startsWith("J")) {
+                    String code = line.substring(1, 7).trim();
+                    codes.add(code);
+                }
+                else if (line.length() >= 6) {
+                    String code = line.substring(0, 6).trim();
+                    codes.add(code);
+                }
             }
         }
-        br.close();
         return codes;
     }
 
@@ -183,17 +212,17 @@ public class StockService {
     public List<String> extractNasdaqStockCode(String txtFilePath) throws IOException {
 
         List<String> codes = new ArrayList<>();
-        BufferedReader br = new BufferedReader(new FileReader(txtFilePath));
 
-        String line;
-        while ((line = br.readLine()) != null) {
-            String[] tokens = line.split("\t");
+        try(BufferedReader br = new BufferedReader(new FileReader(txtFilePath));) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] tokens = line.split("\t");
 
-            if (tokens.length >= 5) {
-                codes.add(tokens[4]);
+                if (tokens.length >= 5) {
+                    codes.add(tokens[4]);
+                }
             }
         }
-        br.close();
         return codes;
     }
 }
