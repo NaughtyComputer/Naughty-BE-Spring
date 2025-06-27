@@ -1,31 +1,57 @@
 package naughty.tuzamate.domain.stock.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import naughty.tuzamate.domain.stock.dto.NasdaqDto;
 import naughty.tuzamate.domain.stock.error.StockErrorCode;
-import naughty.tuzamate.domain.stock.service.StockService;
+import naughty.tuzamate.domain.stock.service.NasdaqService;
+import naughty.tuzamate.domain.stock.service.StockCodeService;
 import naughty.tuzamate.global.apiPayload.CustomResponse;
+import naughty.tuzamate.global.success.GeneralSuccessCode;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@Tag(name = "주식 관련 API", description = "주식 코드 저장 및 관련 작업을 수행하는 API")
+@RequestMapping("/api")
 public class StockController {
 
-    private final StockService stockService;
+    private final StockCodeService stockCodeService;
+    private final NasdaqService nasdaqService;
 
     @PostMapping("/post-stock-codes")
-    @Tag(name = "코스피, 코스닥, 나스닥 주식 코드를 DB에 저장")
+    @Operation(summary = "주식 코드 저장", description = "코스피, 코스닥, 나스닥 주식 코드를 저장합니다.")
     public CustomResponse<?> saveStockCodes() {
 
         try {
-            stockService.codeSaveProcess();
+            stockCodeService.codeSaveProcess();
             return CustomResponse.onSuccess("주식 코드 저장 완료");
         } catch (Exception e) {
             log.error("주식 코드 저장 중 오류 발생: {}", e.getMessage(), e);
             return CustomResponse.onFail(StockErrorCode.STOCK_CODE_SAVE_ERROR);
         }
+    }
+
+    @PostMapping("/nasdaq/{nasdaqStockCode}")
+    @Operation(summary = "수동으로 나스닥 주식 한 개의 기본 정보 가져오기",
+            description = "나스닥 주식 한 개의 기본 정보를 가져옵니다. 주식 코드를 입력해야 합니다.")
+    public NasdaqDto.NasdaqInfoDto getNasdaqStockInfo(@PathVariable("nasdaqStockCode") String nasdaqStockCode) {
+
+        return nasdaqService.getCurrentNasdaqInfo(nasdaqStockCode);
+    }
+
+    @PostMapping("/nasdaq/all")
+    @Operation(summary = "나스닥 주식 전체 정보 가져오기",
+            description = "나스닥 주식 전체 정보를 가져오고 저장합니다. 주식 코드를 입력하지 않아도 됩니다.")
+    public CustomResponse<?> getAllNasdaqStockInfo() {
+
+        nasdaqService.saveNasdaqStocksInfo();
+        return CustomResponse.onSuccess(GeneralSuccessCode.CREATED, "나스닥 주식 전체 정보 저장 완료");
     }
 }
