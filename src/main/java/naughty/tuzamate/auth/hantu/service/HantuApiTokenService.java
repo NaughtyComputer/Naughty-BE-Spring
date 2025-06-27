@@ -53,7 +53,7 @@ public class HantuApiTokenService {
             ResponseEntity<ResponseHantuAccessTokenDto> response = restTemplate.postForEntity(tokenUrl, request, ResponseHantuAccessTokenDto.class);
 
             if (response.getStatusCode() == HttpStatus.OK && response.getBody() != null) {
-                apiTokenStore.saveAccessToken(response.getBody().getAccessToken());
+                apiTokenStore.saveAccessToken(response.getBody().getAccess_token());
                 log.info("HanTU Access Token 갱신 완료");
                 return true;
             }
