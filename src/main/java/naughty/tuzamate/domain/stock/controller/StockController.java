@@ -4,10 +4,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import naughty.tuzamate.domain.stock.dto.NasdaqDto;
+import naughty.tuzamate.domain.stock.dto.krx.KrxDto;
+import naughty.tuzamate.domain.stock.dto.nasdaq.NasdaqDto;
 import naughty.tuzamate.domain.stock.error.StockErrorCode;
-import naughty.tuzamate.domain.stock.service.NasdaqService;
-import naughty.tuzamate.domain.stock.service.StockCodeService;
+import naughty.tuzamate.domain.stock.service.*;
 import naughty.tuzamate.global.apiPayload.CustomResponse;
 import naughty.tuzamate.global.success.GeneralSuccessCode;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +24,9 @@ public class StockController {
 
     private final StockCodeService stockCodeService;
     private final NasdaqService nasdaqService;
+    private final KrxService krxService;
+    private final KrxInquireService krxInquireService;
+    private final KrxFinancialService krxFinancialService;
 
     @PostMapping("/post-stock-codes")
     @Operation(summary = "주식 코드 저장", description = "코스피, 코스닥, 나스닥 주식 코드를 저장합니다.")
@@ -53,5 +56,31 @@ public class StockController {
 
         nasdaqService.saveNasdaqStocksInfo();
         return CustomResponse.onSuccess(GeneralSuccessCode.CREATED, "나스닥 주식 전체 정보 저장 완료");
+    }
+
+    @PostMapping("/krx/all")
+    @Operation(summary = "KRX(코스피, 코스닥)의 정보 가져오고 저장",
+    description =  "주식 현재가, per, pbr, 종목코드, 업종, 영업 이익 증가율, EPS, ROE 값을 가져오고 저장합니다")
+    public CustomResponse<?> getAllKrxStockInfo() {
+
+        krxService.saveKrxStocksInfo();
+        return CustomResponse.onSuccess(GeneralSuccessCode.CREATED, "KRX 주식 전체 정보 저장 완료");
+
+    }
+
+    @PostMapping("/inquire/{krxStockCode}")
+    @Operation(summary = "수동으로 KRX 주식 한 개의 inquire 정보 가져오기",
+            description = "KRX 주식 한 개의 inquire 정보를 가져옵니다. 주식 코드를 입력해야 합니다.")
+    public KrxDto.InquireDto getKrxStockInfoDto(@PathVariable("krxStockCode") String krxStockCode) {
+
+        return krxInquireService.getCurInquireInfo(krxStockCode);
+    }
+
+    @PostMapping("/financial/{krxStockCode}")
+    @Operation(summary = "수동으로 KRX 주식 한 개의 financial 정보 가져오기",
+            description = "KRX 주식 한 개의 financial 정보를 가져옵니다. 주식 코드를 입력해야 합니다.")
+    public KrxDto.FinancialDto getKrxFinancialInfoDto(@PathVariable("krxStockCode") String krxStockCode) {
+
+        return krxFinancialService.getCurFinancialInfo(krxStockCode);
     }
 }
