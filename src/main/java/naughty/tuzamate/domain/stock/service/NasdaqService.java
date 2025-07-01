@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import naughty.tuzamate.auth.hantu.service.HantuApiTokenService;
-import naughty.tuzamate.domain.stock.dto.NasdaqDto;
+import naughty.tuzamate.domain.stock.dto.nasdaq.NasdaqDto;
 import naughty.tuzamate.domain.stock.entity.NasdaqStockCode;
 import naughty.tuzamate.domain.stock.entity.NasdaqStockInfo;
 import naughty.tuzamate.domain.stock.repository.NasdaqStockInfoRepository;
