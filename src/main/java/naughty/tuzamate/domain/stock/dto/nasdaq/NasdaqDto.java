@@ -1,6 +1,5 @@
-package naughty.tuzamate.domain.stock.dto;
+package naughty.tuzamate.domain.stock.dto.nasdaq;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import naughty.tuzamate.domain.stock.entity.NasdaqStockInfo;
