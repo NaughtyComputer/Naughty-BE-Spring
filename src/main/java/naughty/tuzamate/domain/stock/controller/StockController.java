@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import naughty.tuzamate.domain.stock.dto.StockInfoDto;
 import naughty.tuzamate.domain.stock.dto.krx.KrxDto;
 import naughty.tuzamate.domain.stock.dto.nasdaq.NasdaqDto;
 import naughty.tuzamate.domain.stock.error.StockErrorCode;
@@ -27,6 +28,7 @@ public class StockController {
     private final KrxService krxService;
     private final KrxInquireService krxInquireService;
     private final KrxFinancialService krxFinancialService;
+    private final StockInfoService stockInfoService;
 
     @PostMapping("/post-stock-codes")
     @Operation(summary = "주식 코드 저장", description = "코스피, 코스닥, 나스닥 주식 코드를 저장합니다.")
@@ -60,7 +62,7 @@ public class StockController {
 
     @PostMapping("/krx/all")
     @Operation(summary = "KRX(코스피, 코스닥)의 정보 가져오고 저장",
-    description =  "주식 현재가, per, pbr, 종목코드, 업종, 영업 이익 증가율, EPS, ROE 값을 가져오고 저장합니다")
+            description = "주식 현재가, per, pbr, 종목코드, 업종, 영업 이익 증가율, EPS, ROE 값, 상품 이름을 가져오고 저장합니다")
     public CustomResponse<?> getAllKrxStockInfo() {
 
         krxService.saveKrxStocksInfo();
@@ -82,5 +84,15 @@ public class StockController {
     public KrxDto.FinancialDto getKrxFinancialInfoDto(@PathVariable("krxStockCode") String krxStockCode) {
 
         return krxFinancialService.getCurFinancialInfo(krxStockCode);
+    }
+
+    @PostMapping("/stock-info/{stockCode}/{marketCode}")
+    @Operation(summary = "수동으로 주식 한 개의 기본 정보 가져오기. 주식 이름만 가져오게 됩니다.",
+            description = "주식 한 개의 기본 정보를 가져옵니다. 주식 코드와 시장 코드를 입력해야 합니다." +
+                    " 한국 시장 코드는 '300'으로 입력하면 KRX, '512'으로 입력하면 NASDAQ입니다.")
+    public StockInfoDto.InfoDto getKrxStockInfo(@PathVariable("stockCode") String stockCode,
+                                                @PathVariable("marketCode") String marketCode) {
+
+        return stockInfoService.getStockInfo(stockCode, marketCode);
     }
 }

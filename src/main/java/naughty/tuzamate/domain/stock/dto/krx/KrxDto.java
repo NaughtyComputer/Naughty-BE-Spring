@@ -3,6 +3,7 @@ package naughty.tuzamate.domain.stock.dto.krx;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
+import naughty.tuzamate.domain.stock.dto.StockInfoDto;
 import naughty.tuzamate.domain.stock.entity.KrxStockInfo;
 
 public class KrxDto {
@@ -39,6 +40,7 @@ public class KrxDto {
         private String roeVal; // ROE 값
     }
 
+
     @Getter
     public static class KrxStockInfoDto {
         private String stck_prpr;     // 주식 현재가
@@ -49,9 +51,11 @@ public class KrxDto {
         private String bsop_prfi_inrt; // 영업 이익 증가율
         private String roe_val; // ROE 값
         private String eps; // EPS
+        private String prdt_abrv_name; // 상품 약어명
 
         public KrxStockInfo toEntity(KrxDto.InquireDto inquireDto,
-                                     KrxDto.FinancialDto financialDto) {
+                                     KrxDto.FinancialDto financialDto,
+                                     StockInfoDto.InfoDto stockInfoDto) {
             return KrxStockInfo.builder()
                     .stckShrnIscd(inquireDto.getStckShrnIscd())
                     .per(inquireDto.getPer())
@@ -61,6 +65,7 @@ public class KrxDto {
                     .bsopPrfiInrt(financialDto.getBsopPrfiInrt())
                     .roeVal(financialDto.getRoeVal())
                     .eps(financialDto.getEps())
+                    .prdtAbrvName(stockInfoDto.getPrdtAbrvName())
                     .build();
         }
     }
