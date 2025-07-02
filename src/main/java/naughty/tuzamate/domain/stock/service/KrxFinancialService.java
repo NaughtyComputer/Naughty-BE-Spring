@@ -14,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 /**
- * 한국투자증권에서 주식현재가 시세 API를 통해 주식 영업 이익 증가율, EPS, ROE 값을
+ * 한국투자증권에서 주식현재가 시세 API를 통해 주식 EPS, ROE 값을
  * 조회하는 서비스입니다.
  */
 
@@ -77,8 +77,7 @@ public class KrxFinancialService {
             if (node != null) {
                 KrxDto.FinancialDto outputDto = new KrxDto.FinancialDto();
 
-                outputDto.setBsopPrfiInrt(node.path("bsop_prfi_inrt").asText());
-                outputDto.setEps(node.path("eps").asText());
+                outputDto.setEps(node.path("eps").asText("0.00"));
                 outputDto.setRoeVal(node.path("roe_val").asText());
 
                 data = outputDto;

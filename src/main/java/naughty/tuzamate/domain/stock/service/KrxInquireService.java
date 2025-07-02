@@ -71,8 +71,8 @@ public class KrxInquireService {
                 KrxDto.InquireDto outputDto = new KrxDto.InquireDto();
 
                 outputDto.setStckPrpr(node.path("stck_prpr").asText());
-                outputDto.setPer(node.path("per").asText());
-                outputDto.setPbr(node.path("pbr").asText());
+                outputDto.setPer(node.path("per").asText("0.00"));
+                outputDto.setPbr(node.path("pbr").asText("0.00"));
                 outputDto.setStckShrnIscd(node.path("stck_shrn_iscd").asText());
                 outputDto.setBstpKorIsnm(node.path("bstp_kor_isnm").asText());
                 data = outputDto;
