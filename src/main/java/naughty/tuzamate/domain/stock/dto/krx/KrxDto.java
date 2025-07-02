@@ -31,9 +31,6 @@ public class KrxDto {
     @Setter
     public static class FinancialDto {
 
-        @JsonProperty("bsop_prfi_inrt")
-        private String bsopPrfiInrt; // 영업 이익 증가율
-
         private String eps; // EPS
 
         @JsonProperty("roe_val")
@@ -48,7 +45,6 @@ public class KrxDto {
         private String pbr;     // PBR
         private String stck_shrn_iscd;     // 주식 단축 종목코드
         private String bstp_kor_isnm; // 업종 한글 종목명
-        private String bsop_prfi_inrt; // 영업 이익 증가율
         private String roe_val; // ROE 값
         private String eps; // EPS
         private String prdt_abrv_name; // 상품 약어명
@@ -62,7 +58,6 @@ public class KrxDto {
                     .pbr(inquireDto.getPbr())
                     .stckPrpr(inquireDto.getStckPrpr())
                     .bstpKorIsnm(inquireDto.getBstpKorIsnm())
-                    .bsopPrfiInrt(financialDto.getBsopPrfiInrt())
                     .roeVal(financialDto.getRoeVal())
                     .eps(financialDto.getEps())
                     .prdtAbrvName(stockInfoDto.getPrdtAbrvName())
