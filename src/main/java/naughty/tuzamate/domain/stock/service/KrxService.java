@@ -2,6 +2,7 @@ package naughty.tuzamate.domain.stock.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import naughty.tuzamate.domain.stock.dto.StockInfoDto;
 import naughty.tuzamate.domain.stock.dto.krx.KrxDto;
 import naughty.tuzamate.domain.stock.entity.KrxStockInfo;
 import naughty.tuzamate.domain.stock.entity.StockCode;
@@ -13,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional
 @RequiredArgsConstructor
 @Slf4j
 public class KrxService {
@@ -22,6 +22,7 @@ public class KrxService {
     private final KrxInquireService krxInquireService;
     private final KrxFinancialService krxFinancialService;
     private final KrxStockInfoRepository krxStockInfoRepository;
+    private final StockInfoService stockInfoService;
 
     public void saveKrxStocksInfo() {
 
@@ -37,18 +38,19 @@ public class KrxService {
                 // 주식 코드를 이용해 현재가, PER, PBR, 업종 한글 종목명 조회
                 KrxDto.InquireDto currentPerPbrOutputDto = krxInquireService.getCurInquireInfo(stockCode.getCode());
                 // 주식 코드를 이용해 영업 이익 증가율, EPS, ROE 값 조회
-                KrxDto.FinancialDto currentFinanceOutputDto = krxFinancialService.getCurFinancialInfo(stockCode.getCode()); 
+                KrxDto.FinancialDto currentFinanceOutputDto = krxFinancialService.getCurFinancialInfo(stockCode.getCode());
+                StockInfoDto.InfoDto currentKrxStockInfoDto = stockInfoService.getStockInfo(stockCode.getCode(), "300");
 
-                log.info("PER: {}", currentPerPbrOutputDto.getPer());
+               /* log.info("PER: {}", currentPerPbrOutputDto.getPer());
                 log.info("EPS: {}", currentFinanceOutputDto.getEps());
-
-
+                log.info("NAME: {}", currentKrxStockInfoDto.getPrdtAbrvName());*/
 
                 KrxDto.KrxStockInfoDto stockInfoDto = new KrxDto.KrxStockInfoDto();
 
                 KrxStockInfo stockInfo = stockInfoDto.toEntity(
                         currentPerPbrOutputDto,
-                        currentFinanceOutputDto
+                        currentFinanceOutputDto,
+                        currentKrxStockInfoDto
                 );
 
                 krxStockInfoRepository.save(stockInfo);
