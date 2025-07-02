@@ -22,4 +22,6 @@ public class NasdaqStockInfo {
     private String pbrx; // PBR
     private String epsx; // EPS
     private String eIcod; // 업종 섹터
+
+    private String prdtAbrvName; // 상품 약어명
 }

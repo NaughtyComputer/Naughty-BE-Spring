@@ -2,6 +2,7 @@ package naughty.tuzamate.domain.stock.dto.nasdaq;
 
 import lombok.Getter;
 import lombok.Setter;
+import naughty.tuzamate.domain.stock.dto.StockInfoDto;
 import naughty.tuzamate.domain.stock.entity.NasdaqStockInfo;
 
 public class NasdaqDto {
@@ -16,14 +17,16 @@ public class NasdaqDto {
     private String epsx; // EPS
     private String e_icod; // 업종 섹터
 
-    public NasdaqStockInfo toEntity( NasdaqDto.NasdaqInfoDto dto) {
+    public NasdaqStockInfo toEntity(NasdaqDto.NasdaqInfoDto nasdaqInfoDto, StockInfoDto.InfoDto stockInfoDto) {
       return NasdaqStockInfo.builder()
-              .code(dto.code)
-              .perx(dto.perx)
-              .pbrx(dto.pbrx)
-              .epsx(dto.epsx)
-              .eIcod(dto.e_icod)
+              .code(nasdaqInfoDto.code)
+              .perx(nasdaqInfoDto.perx)
+              .pbrx(nasdaqInfoDto.pbrx)
+              .epsx(nasdaqInfoDto.epsx)
+              .eIcod(nasdaqInfoDto.e_icod)
+              .prdtAbrvName(stockInfoDto.getPrdtAbrvName())
               .build();
     }
+
   }
 }

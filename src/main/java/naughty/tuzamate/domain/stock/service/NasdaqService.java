@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import naughty.tuzamate.auth.hantu.service.HantuApiTokenService;
+import naughty.tuzamate.domain.stock.dto.StockInfoDto;
 import naughty.tuzamate.domain.stock.dto.nasdaq.NasdaqDto;
 import naughty.tuzamate.domain.stock.entity.NasdaqStockCode;
 import naughty.tuzamate.domain.stock.entity.NasdaqStockInfo;
@@ -28,6 +29,7 @@ public class NasdaqService {
     private final NasdaqCodeRepository nasdaqCodeRepository;
     private final NasdaqStockInfoRepository nasdaqStockInfoRepository;
     private final HantuApiTokenService hantuApiTokenService;
+    private final StockInfoService stockInfoService;
 
     @Value("${tuza.api.APP_KEY}")
     private String appKey;
@@ -113,11 +115,12 @@ public class NasdaqService {
                 Thread.sleep(100);
 
                 NasdaqDto.NasdaqInfoDto currentNasdaqInfo = getCurrentNasdaqInfo(stockCode.getCode());
+                StockInfoDto.InfoDto currentStockInfo = stockInfoService.getStockInfo(stockCode.getCode(), "512");
 
                /* log.info("PER: {}", currentNasdaqInfo.getPerx());
                 log.info("EPS: {}", currentNasdaqInfo.getEpsx());*/
 
-                NasdaqStockInfo entity = currentNasdaqInfo.toEntity(currentNasdaqInfo);
+                NasdaqStockInfo entity = currentNasdaqInfo.toEntity(currentNasdaqInfo, currentStockInfo);
 
                 nasdaqStockInfoRepository.save(entity);
 
