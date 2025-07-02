@@ -8,6 +8,7 @@ import naughty.tuzamate.domain.stock.entity.KrxStockInfo;
 import naughty.tuzamate.domain.stock.entity.StockCode;
 import naughty.tuzamate.domain.stock.repository.KrxStockInfoRepository;
 import naughty.tuzamate.domain.stock.repository.code.StockCodeRepository;
+import naughty.tuzamate.domain.stock.strategy.FilterStrategy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +24,7 @@ public class KrxService {
     private final KrxFinancialService krxFinancialService;
     private final KrxStockInfoRepository krxStockInfoRepository;
     private final StockInfoService stockInfoService;
-
+    private final FilterStrategy filterStrategy;
     public void saveKrxStocksInfo() {
 
         List<StockCode> stockCodeList = stockCodeRepository.findAll();
@@ -44,6 +45,11 @@ public class KrxService {
                /* log.info("PER: {}", currentPerPbrOutputDto.getPer());
                 log.info("EPS: {}", currentFinanceOutputDto.getEps());
                 log.info("NAME: {}", currentKrxStockInfoDto.getPrdtAbrvName());*/
+
+                if (filterStrategy.shouldSkipKrx(currentPerPbrOutputDto, currentFinanceOutputDto)) {
+                    log.info("PER or PBR or EPS is zero: {}", stockCode.getCode());
+                    continue;
+                }
 
                 KrxDto.KrxStockInfoDto stockInfoDto = new KrxDto.KrxStockInfoDto();
 

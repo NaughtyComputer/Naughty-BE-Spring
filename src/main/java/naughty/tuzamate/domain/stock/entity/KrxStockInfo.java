@@ -27,8 +27,6 @@ public class KrxStockInfo {
 
     private String bstpKorIsnm; // 업종 한글 종목명
 
-    private String bsopPrfiInrt; // 영업 이익 증가율
-
     private String roeVal; // ROE 값
 
     private String eps; // 주당 순이익 (Earnings Per Share)

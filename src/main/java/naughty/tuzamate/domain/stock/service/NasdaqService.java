@@ -11,6 +11,7 @@ import naughty.tuzamate.domain.stock.entity.NasdaqStockCode;
 import naughty.tuzamate.domain.stock.entity.NasdaqStockInfo;
 import naughty.tuzamate.domain.stock.repository.NasdaqStockInfoRepository;
 import naughty.tuzamate.domain.stock.repository.code.NasdaqCodeRepository;
+import naughty.tuzamate.domain.stock.strategy.FilterStrategy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,7 @@ public class NasdaqService {
     private final NasdaqStockInfoRepository nasdaqStockInfoRepository;
     private final HantuApiTokenService hantuApiTokenService;
     private final StockInfoService stockInfoService;
+    private final FilterStrategy filterStrategy;
 
     @Value("${tuza.api.APP_KEY}")
     private String appKey;
@@ -67,8 +69,9 @@ public class NasdaqService {
                 outputDto.setPerx(node.path("perx").asText());
                 outputDto.setPbrx(node.path("pbrx").asText());
                 outputDto.setEpsx(node.path("epsx").asText());
-                if (node.path("e_icod").asText().isEmpty()) outputDto.setE_icod(null);
-                else outputDto.setE_icod(node.path("e_icod").asText());
+                outputDto.setE_icod(node.path("e_icod").asText());
+                outputDto.setLast(node.path("last").asText());
+
 
                 data = outputDto;
             }
@@ -119,6 +122,11 @@ public class NasdaqService {
 
                /* log.info("PER: {}", currentNasdaqInfo.getPerx());
                 log.info("EPS: {}", currentNasdaqInfo.getEpsx());*/
+
+                if (filterStrategy.shouldSkipNasdaq(currentNasdaqInfo)) {
+                    log.info("PER or PBR or EPS is zero: {}", stockCode.getCode());
+                    continue; // 필터 전략에 의해 스킵된 경우 다음 주식 코드로 넘어감
+                }
 
                 NasdaqStockInfo entity = currentNasdaqInfo.toEntity(currentNasdaqInfo, currentStockInfo);
 

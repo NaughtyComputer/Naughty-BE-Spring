@@ -16,6 +16,7 @@ public class NasdaqDto {
     private String pbrx; // PBR
     private String epsx; // EPS
     private String e_icod; // 업종 섹터
+    private String last; // 현재가
 
     public NasdaqStockInfo toEntity(NasdaqDto.NasdaqInfoDto nasdaqInfoDto, StockInfoDto.InfoDto stockInfoDto) {
       return NasdaqStockInfo.builder()
@@ -24,6 +25,7 @@ public class NasdaqDto {
               .pbrx(nasdaqInfoDto.pbrx)
               .epsx(nasdaqInfoDto.epsx)
               .eIcod(nasdaqInfoDto.e_icod)
+              .last(nasdaqInfoDto.last)
               .prdtAbrvName(stockInfoDto.getPrdtAbrvName())
               .build();
     }

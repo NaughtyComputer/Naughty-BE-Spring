@@ -23,5 +23,8 @@ public class NasdaqStockInfo {
     private String epsx; // EPS
     private String eIcod; // 업종 섹터
 
+    private String last; // 현재가
+
     private String prdtAbrvName; // 상품 약어명
+
 }
