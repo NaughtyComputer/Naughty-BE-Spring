@@ -59,6 +59,19 @@ public class User extends BaseTimeEntity {
 
     private SocialType socialType;
 
+
+    /**
+     * 회원의 마지막 로그아웃 이후 발급되는 토큰을 판별하기 위한 사용
+     * 처음엔 0, 이후 로그아웃 시 + 1
+     */
+    @Column(nullable = false)
+    private int tokenVersion = 0;
+
+    public void increaseTokenVersion() {
+        this.tokenVersion++;
+    }
+
+
    /* @Column(nullable = false)
     private String accessToken;
 
@@ -71,6 +84,7 @@ public class User extends BaseTimeEntity {
     }*/
 
     public void updateNickname(String nickname) {
+
         this.nickname = nickname;
     }
 
