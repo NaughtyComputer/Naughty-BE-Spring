@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 public enum AuthSuccessCode implements BaseSuccessCode {
 
     AUTH_SUCCESS_CODE(HttpStatus.ACCEPTED, "AUTH200", "인가 코드 발급이 성공했습니다."),
+    LOGOUT_SUCCESS_CODE(HttpStatus.OK, "AUTH200", "로그아웃이 되었습니다.")
     ;
 
     private final HttpStatus status;

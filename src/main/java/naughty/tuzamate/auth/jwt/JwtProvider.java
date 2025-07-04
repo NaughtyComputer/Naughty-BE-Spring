@@ -123,6 +123,7 @@ public class JwtProvider {
                 .setHeader(Map.of("alg", "HS256", "typ", "JWT")) // JWT header 설정
                 .setSubject(member.getEmail()) // JWT의 Subject을 email로 설정
                 .claim("id", member.getId()) // id 를 Claim으로 추가
+                .claim("tokenVersion", member.getTokenVersion()) // tokenVersion을 Claim으로 추가
                 .setIssuedAt(Date.from(issuedAt)) // 만들어진 시간을 현재 시간으로 설정
                 .setExpiration(Date.from(expiredAt)) // 유효기간 설정
                 .signWith(secret, SignatureAlgorithm.HS256) // 암호화를 위한 sign 설정
@@ -155,6 +156,14 @@ public class JwtProvider {
             // INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN401", "토큰이 유효하지 않습니다."),
 
         }
+    }
+
+    public Long getUserId(String token) {
+        return getClaims(token).getBody().get("id", Long.class);
+    }
+
+    public int getTokenVersion(String token) {
+        return getClaims(token).getBody().get("tokenVersion", Integer.class);
     }
 
     public String getEmail(String token) {
