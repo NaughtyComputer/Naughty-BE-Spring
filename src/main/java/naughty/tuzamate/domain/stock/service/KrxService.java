@@ -38,7 +38,7 @@ public class KrxService {
 
                 // 주식 코드를 이용해 현재가, PER, PBR, 업종 한글 종목명 조회
                 KrxDto.InquireDto currentPerPbrOutputDto = krxInquireService.getCurInquireInfo(stockCode.getCode());
-                // 주식 코드를 이용해 영업 이익 증가율, EPS, ROE 값 조회
+                // 주식 코드를 이용해 EPS 값 조회
                 KrxDto.FinancialDto currentFinanceOutputDto = krxFinancialService.getCurFinancialInfo(stockCode.getCode());
                 StockInfoDto.InfoDto currentKrxStockInfoDto = stockInfoService.getStockInfo(stockCode.getCode(), "300");
 
