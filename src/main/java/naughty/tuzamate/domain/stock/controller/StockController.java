@@ -62,7 +62,7 @@ public class StockController {
 
     @PostMapping("/krx/all")
     @Operation(summary = "KRX(코스피, 코스닥)의 정보 가져오고 저장",
-            description = "주식 현재가, per, pbr, 종목코드, 업종, EPS, ROE 값, 상품 이름을 가져오고 저장합니다")
+            description = "주식 현재가, per, pbr, 종목코드, 업종, EPS, 상품 이름을 가져오고 저장합니다")
     public CustomResponse<?> getAllKrxStockInfo() {
 
         krxService.saveKrxStocksInfo();
