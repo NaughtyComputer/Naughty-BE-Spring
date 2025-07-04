@@ -33,8 +33,6 @@ public class KrxDto {
 
         private String eps; // EPS
 
-        @JsonProperty("roe_val")
-        private String roeVal; // ROE 값
     }
 
 
@@ -45,7 +43,6 @@ public class KrxDto {
         private String pbr;     // PBR
         private String stck_shrn_iscd;     // 주식 단축 종목코드
         private String bstp_kor_isnm; // 업종 한글 종목명
-        private String roe_val; // ROE 값
         private String eps; // EPS
         private String prdt_abrv_name; // 상품 약어명
 
@@ -58,7 +55,6 @@ public class KrxDto {
                     .pbr(inquireDto.getPbr())
                     .stckPrpr(inquireDto.getStckPrpr())
                     .bstpKorIsnm(inquireDto.getBstpKorIsnm())
-                    .roeVal(financialDto.getRoeVal())
                     .eps(financialDto.getEps())
                     .prdtAbrvName(stockInfoDto.getPrdtAbrvName())
                     .build();
