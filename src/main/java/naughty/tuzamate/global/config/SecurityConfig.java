@@ -39,7 +39,8 @@ public class SecurityConfig {
             "/swagger-ui.html",
             "/auth/kakao-oauth",
             "/signUp",
-            "/login"
+            "/login",
+            "/auth/refresh"
     };
 
     @Bean
