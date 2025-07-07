@@ -10,6 +10,7 @@ import naughty.tuzamate.auth.jwt.JwtProvider;
 import naughty.tuzamate.auth.jwt.error.handler.JwtAccessDeniedHandler;
 import naughty.tuzamate.auth.jwt.error.handler.JwtAuthenticationEntryPoint;
 import naughty.tuzamate.auth.principal.PrincipalDetailsService;
+import naughty.tuzamate.domain.user.repository.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -29,6 +30,7 @@ public class SecurityConfig {
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
     private final PrincipalDetailsService principalDetailsService;
     private final JwtProvider jwtProvider;
+    private final UserRepository userRepository;
 
     private final String[] allowUrls = {
             "/",
@@ -37,7 +39,8 @@ public class SecurityConfig {
             "/swagger-ui.html",
             "/auth/kakao-oauth",
             "/signUp",
-            "/login"
+            "/login",
+            "/auth/refresh"
     };
 
     @Bean
@@ -48,7 +51,7 @@ public class SecurityConfig {
 
     @Bean
     public Filter jwtFilter() {
-        return new JwtFilter(jwtProvider, principalDetailsService);
+        return new JwtFilter(jwtProvider, principalDetailsService, userRepository);
     }
 
     @Bean
