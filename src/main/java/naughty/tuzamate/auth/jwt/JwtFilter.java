@@ -7,12 +7,17 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import naughty.tuzamate.auth.jwt.error.JwtErrorCode;
+import naughty.tuzamate.auth.principal.PrincipalDetails;
 import naughty.tuzamate.auth.principal.PrincipalDetailsService;
+import naughty.tuzamate.domain.user.entity.User;
+import naughty.tuzamate.domain.user.repository.UserRepository;
 import naughty.tuzamate.global.apiPayload.CustomResponse;
 import naughty.tuzamate.global.error.BaseErrorCode;
 import naughty.tuzamate.global.error.exception.CustomException;
 import naughty.tuzamate.domain.user.error.UserErrorCode;
 import naughty.tuzamate.domain.user.error.exception.UserCustomException;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,23 +32,46 @@ public class JwtFilter extends OncePerRequestFilter {
 
     private final JwtProvider jwtProvider;
     private final PrincipalDetailsService principalDetailsService;
+    private final UserRepository userRepository;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        if (request.getRequestURI().equals("/auth/refresh")) {
+            log.info("CookieHeader : {}", request.getHeader("Cookie"));
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         try {
             String header = request.getHeader("Authorization");
             if (header != null && header.startsWith("Bearer ")) {
                 String token = header.split(" ")[1];
-                String email = jwtProvider.getEmail(token);
-                UserDetails userDetails = principalDetailsService.loadUserByUsername(email);
 
-                if (userDetails != null) {
+                jwtProvider.isValid(token);
+
+                Long userId = jwtProvider.getUserId(token);
+                int tokenVersion = jwtProvider.getTokenVersion(token);
+                User user = userRepository.findById(userId).orElseThrow(() -> new UserCustomException(UserErrorCode.USER_NOT_FOUND));
+                if(user.getTokenVersion() != tokenVersion) {
+                    throw new CustomException(UserErrorCode.LOGGED_OUT_USER);
+                }
+
+                /*String email = jwtProvider.getEmail(token);
+                UserDetails userDetails = principalDetailsService.loadUserByUsername(email);
+                */
+
+                UserDetails userDetails = new PrincipalDetails(user);
+
+                /*if (userDetails != null) {
                     Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 } else {
                     throw new UserCustomException(UserErrorCode.USER_NOT_FOUND);
-                }
+                }*/
+
+                Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
             }
 
             filterChain.doFilter(request, response);

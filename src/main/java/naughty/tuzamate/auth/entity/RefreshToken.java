@@ -13,14 +13,10 @@ import java.time.LocalDateTime;
 public class RefreshToken {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long userId;
 
     @Column(nullable = false, unique = true)
     private String token;
-
-    @Column(nullable = false)
-    private Long userId;
 
     @Column(nullable = false)
     private LocalDateTime expireDate;
@@ -29,6 +25,10 @@ public class RefreshToken {
         this.token = token;
         this.userId = userId;
         this.expireDate = expireDate;
+    }
+
+    public void update(String token) {
+        this.token = token;
     }
 
 }
