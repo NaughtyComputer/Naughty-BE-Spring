@@ -19,15 +19,15 @@ public class ProfileConverter {
                 .experience(user.isExperience())
                 .email(user.getEmail())
                 .nickname(user.getNickname())
-                .funding_situation(user.getFunding_situation())
+                .funding_situation(user.getFundingSituation())
                 .income(user.getIncome())
                 .stability(user.getStability())
                 .source(user.getSource())
                 .type(user.getType())
                 .proportion(user.getProportion())
                 .period(user.getPeriod())
-                .expected_income(user.getExpected_income())
-                .expected_loss(user.getExpected_loss())
+                .expected_income(user.getExpectedIncome())
+                .expected_loss(user.getExpectedLoss())
                 .purpose(user.getPurpose())
                 .build();
     }
