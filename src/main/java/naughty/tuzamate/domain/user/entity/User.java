@@ -20,7 +20,7 @@ public class User extends BaseTimeEntity {
     private Long id;
 
     private String password;
-  
+
     private Gender gender;
 
     private Long age;
@@ -63,9 +63,20 @@ public class User extends BaseTimeEntity {
 
     private Long credit; // 크레딧
 
+
+    /**
+     * 회원의 마지막 로그아웃 이후 발급되는 토큰을 판별하기 위한 사용
+     * 처음엔 0, 이후 로그아웃 시 + 1
+     */
+    @Column(nullable = false)
+    private int tokenVersion = 0;
+
+    public void increaseTokenVersion() {
+        this.tokenVersion++;
+    }
+
     @Column(columnDefinition = "TEXT")
     private String recentRecommendedProduct; // 최근 추천 상품
-
 
     public void updateNickname(String nickname) {
         this.nickname = nickname;
