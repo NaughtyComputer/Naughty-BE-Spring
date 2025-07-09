@@ -3,6 +3,7 @@ package naughty.tuzamate.domain.user.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import naughty.tuzamate.domain.user.enums.Gender;
 import naughty.tuzamate.global.BaseTimeEntity;
 import naughty.tuzamate.domain.user.enums.SocialType;
 
@@ -19,8 +20,8 @@ public class User extends BaseTimeEntity {
     private Long id;
 
     private String password;
-  
-    private Long gender;
+
+    private Gender gender;
 
     private Long age;
 
@@ -31,7 +32,7 @@ public class User extends BaseTimeEntity {
 
     private String nickname;
 
-    private String funding_situation;
+    private String fundingSituation;
 
     private Long income;
 
@@ -47,17 +48,20 @@ public class User extends BaseTimeEntity {
     @Column(name = "investment_proportion")
     private String proportion;
 
-    private Long period;
+    private Long period; // 예상 투자 기간
 
-    private Long expected_income;
+    private Long expectedIncome;
 
-    private Long expected_loss;
+    private Long expectedLoss;
 
-    private String purpose;
+    @Column(name = "ivestment_purpose")
+    private String purpose; // 투자 목적
 
     private String role;
 
     private SocialType socialType;
+
+    private Long credit; // 크레딧
 
 
     /**
@@ -71,20 +75,10 @@ public class User extends BaseTimeEntity {
         this.tokenVersion++;
     }
 
-
-   /* @Column(nullable = false)
-    private String accessToken;
-
-    @Column(nullable = false)
-    private String refreshToken;
-
-    public void updateTokens(String accessToken, String refreshToken) {
-        this.accessToken = accessToken;
-        this.refreshToken = refreshToken;
-    }*/
+    @Column(columnDefinition = "TEXT")
+    private String recentRecommendedProduct; // 최근 추천 상품
 
     public void updateNickname(String nickname) {
-
         this.nickname = nickname;
     }
 
