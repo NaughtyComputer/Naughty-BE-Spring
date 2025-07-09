@@ -1,5 +1,5 @@
 package naughty.tuzamate.domain.user.enums;
 
-public enum SocialType {
-    KAKAO;
+public enum Gender {
+    MALE, FEMALE
 }
