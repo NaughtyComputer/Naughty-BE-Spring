@@ -1,6 +1,10 @@
 package naughty.tuzamate.domain.profile.dto.response;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import org.springframework.data.domain.Slice;
+
+import java.util.List;
 
 public class ProfileResponseDTO {
 
@@ -26,6 +30,21 @@ public class ProfileResponseDTO {
             Long expected_loss,
             String purpose
     ) {}
+
+    @Builder
+    public record scrapResponse(
+            Long postId,
+            String title,
+            String contentPreview
+    ) {}
+
+    @Builder
+    public record scrapListResponse(
+            List<scrapResponse> scraps,
+            boolean hasNextPage,
+            Long cursor
+    ) {}
+
 
 
 }
