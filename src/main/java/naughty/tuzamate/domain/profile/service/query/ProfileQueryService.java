@@ -1,6 +1,8 @@
 package naughty.tuzamate.domain.profile.service.query;
 
 import lombok.RequiredArgsConstructor;
+import naughty.tuzamate.domain.post.entity.Post;
+import naughty.tuzamate.domain.post.repository.PostRepository;
 import naughty.tuzamate.domain.postLike.entity.PostLike;
 import naughty.tuzamate.domain.postLike.repository.PostLikeRepository;
 import naughty.tuzamate.domain.postScrap.entity.PostScrap;
@@ -25,6 +27,7 @@ public class ProfileQueryService {
     private final UserRepository userRepository;
     private final PostScrapRepository postScrapRepository;
     private final PostLikeRepository postLikeRepository;
+    private final PostRepository postRepository;
 
     public User getProfile(Long userId) {
 
@@ -58,5 +61,19 @@ public class ProfileQueryService {
         }
 
         return ProfileConverter.toProfileCommunityListDTO(postLikes);
+    }
+
+    public ProfileResponseDTO.profileCommunityListResponse getPostList(User user, Long cursor, int offset) {
+        Pageable pageable = PageRequest.of(0, offset);
+
+        Slice<Post> posts = null;
+
+        if (cursor == 0) {
+            posts = postRepository.findPostListByUserIdOrderByIdDesc(user.getId(), pageable);
+        } else {
+            posts = postRepository.findPostListByUserIdLessThanOrderByIdDesc(user.getId(), cursor, pageable);
+        }
+
+        return ProfileConverter.toProfileCommunityListDTO(posts);
     }
 }
