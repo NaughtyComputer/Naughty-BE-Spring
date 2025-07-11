@@ -1,5 +1,6 @@
 package naughty.tuzamate.domain.profile.converter;
 
+import naughty.tuzamate.domain.community.CommunityItem;
 import naughty.tuzamate.domain.post.entity.Post;
 import naughty.tuzamate.domain.postScrap.entity.PostScrap;
 import naughty.tuzamate.domain.profile.dto.request.ProfileRequestDTO;
@@ -38,23 +39,23 @@ public class ProfileConverter {
                 .build();
     }
 
-    public static ProfileResponseDTO.scrapResponse toPostScrapResponseDTO(PostScrap postScrap) {
+    public static ProfileResponseDTO.profileCommunityResponse toProfileCommunityDTO(Post post) {
 
-        return ProfileResponseDTO.scrapResponse.builder()
-                .postId(postScrap.getId())
-                .title(postScrap.getPost().getTitle())
-                .contentPreview(postScrap.getPost().getContent().length() > 20 ? postScrap.getPost().getContent().substring(0, 20) + "..." : postScrap.getPost().getContent())
+        return ProfileResponseDTO.profileCommunityResponse.builder()
+                .postId(post.getId())
+                .title(post.getPost().getTitle())
+                .contentPreview(post.getPost().getContent().length() > 20 ? post.getPost().getContent().substring(0, 20) + "..." : post.getPost().getContent())
                 .build();
     }
 
-    public static ProfileResponseDTO.scrapListResponse toScrapListResponse(Slice<PostScrap> postScraps) {
-        return ProfileResponseDTO.scrapListResponse.builder()
-                .scraps(postScraps.getContent().isEmpty() ? new ArrayList<>() :
-                        postScraps.getContent().stream()
-                                .map(postScrap -> toPostScrapResponseDTO(postScrap))
+    public static <T extends CommunityItem> ProfileResponseDTO.profileCommunityListResponse toProfileCommunityListDTO(Slice<T> slice) {
+        return ProfileResponseDTO.profileCommunityListResponse.builder()
+                .scraps(slice.getContent().isEmpty() ? new ArrayList<>() :
+                        slice.getContent().stream()
+                                .map(item -> ProfileConverter.toProfileCommunityDTO(item.getPost()))
                                 .toList())
-                .hasNextPage(postScraps.hasNext())
-                .cursor(postScraps.getContent().isEmpty() ? 0L : postScraps.getContent().get(postScraps.getContent().size() - 1).getId())
+                .hasNextPage(slice.hasNext())
+                .cursor(slice.getContent().isEmpty() ? 0L : slice.getContent().get(slice.getContent().size() - 1).getCursorId())
                 .build();
     }
 

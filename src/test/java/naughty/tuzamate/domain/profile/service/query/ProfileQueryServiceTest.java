@@ -61,15 +61,15 @@ class ProfileQueryServiceTest {
         when(postScrapRepository.findScrapListByUserIdLessThanOrderByIdDesc(eq(user.getId()), eq(cursor), any()))
                 .thenReturn(postScraps);
 
-        ProfileResponseDTO.scrapListResponse expectedResponse = new ProfileResponseDTO.scrapListResponse(List.of(), false, 5L);
+        ProfileResponseDTO.profileCommunityListResponse expectedResponse = new ProfileResponseDTO.profileCommunityListResponse(List.of(), false, 5L);
 
         try (MockedStatic<ProfileConverter> mocked =
                      mockStatic(ProfileConverter.class)) {
-            mocked.when(() -> ProfileConverter.toScrapListResponse(postScraps))
+            mocked.when(() -> ProfileConverter.toProfileCommunityListDTO(postScraps))
                     .thenReturn(expectedResponse);
 
             // when
-            ProfileResponseDTO.scrapListResponse actualResponse = profileQueryService.getScrapList(user, cursor, offset);
+            ProfileResponseDTO.profileCommunityListResponse actualResponse = profileQueryService.getScrapList(user, cursor, offset);
 
             // then
             Assertions.assertThat(actualResponse).isSameAs(expectedResponse);
@@ -102,7 +102,7 @@ class ProfileQueryServiceTest {
                 .thenReturn(postScraps);
 
         // when
-        ProfileResponseDTO.scrapListResponse actualResponse = profileQueryService.getScrapList(user, cursor, offset);
+        ProfileResponseDTO.profileCommunityListResponse actualResponse = profileQueryService.getScrapList(user, cursor, offset);
 
         // then
         Assertions.assertThat(actualResponse.scraps())
