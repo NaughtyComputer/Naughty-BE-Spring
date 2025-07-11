@@ -81,4 +81,20 @@ public class ProfileController {
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, likeList);
     }
+
+    @GetMapping("/posts")
+    @Operation(summary = "작성한 게시글 조회")
+    @Parameters({
+            @Parameter(name = "cursor", description = "게시글 목록의 커서 값. 처음 조회 시 0을 입력", required = false, example = "0"),
+            @Parameter(name = "offset", description = "한 번에 가져올 게시글 개수. 기본 값은 10", required = false, example = "10")
+    })
+    public CustomResponse<?> getPostList(
+            @UserInfo User user,
+            @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
+            @RequestParam(value = "offset", defaultValue = "10") int offset) {
+
+        ProfileResponseDTO.profileCommunityListResponse postList = profileQueryService.getPostList(user, cursor, offset);
+
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK, postList);
+    }
 }
