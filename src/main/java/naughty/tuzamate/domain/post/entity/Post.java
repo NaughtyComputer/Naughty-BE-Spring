@@ -3,6 +3,7 @@ package naughty.tuzamate.domain.post.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import naughty.tuzamate.domain.comment.entity.Comment;
+import naughty.tuzamate.domain.post.enums.BoardType;
 import naughty.tuzamate.domain.postLike.entity.PostLike;
 import naughty.tuzamate.global.BaseTimeEntity;
 import naughty.tuzamate.domain.user.entity.User;
@@ -28,6 +29,9 @@ public class Post extends BaseTimeEntity {
 
     @Column(name = "like_num")
     private Long likeNum;
+
+    @Enumerated(EnumType.STRING)
+    private BoardType boardType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

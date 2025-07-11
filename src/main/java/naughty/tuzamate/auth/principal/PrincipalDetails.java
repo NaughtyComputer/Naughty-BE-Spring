@@ -24,6 +24,10 @@ public class PrincipalDetails implements UserDetails {
         return roles.stream().map(SimpleGrantedAuthority::new).toList();
     }
 
+    public Long getId() {
+        return user.getId();
+    }
+
     @Override
     public String getUsername() {
         return user.getEmail();

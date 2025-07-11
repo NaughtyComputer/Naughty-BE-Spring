@@ -20,6 +20,9 @@ public class PostResDTO {
             String title,
             String content,
             Long likeNum,
+            // 작성자 닉네임, 댓글 수 필드 추가
+            String author,
+            Long commentNum,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ){
@@ -27,7 +30,9 @@ public class PostResDTO {
 
     @Builder
     public record PostPreviewListDTO(
-            List<PostPreviewDTO> postPreviewDTOList
+            List<PostPreviewDTO> postPreviewDTOList,
+            Long nextCursor,
+            boolean hasNext
     ){
     }
 
