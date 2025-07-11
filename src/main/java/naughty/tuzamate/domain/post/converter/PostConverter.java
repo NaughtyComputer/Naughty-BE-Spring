@@ -5,6 +5,8 @@ import lombok.NoArgsConstructor;
 import naughty.tuzamate.domain.post.dto.PostReqDTO;
 import naughty.tuzamate.domain.post.dto.PostResDTO;
 import naughty.tuzamate.domain.post.entity.Post;
+import naughty.tuzamate.domain.post.enums.BoardType;
+import naughty.tuzamate.domain.user.entity.User;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,11 +15,13 @@ import java.util.stream.Collectors;
 public class PostConverter {
 
     // CreatePostRequestDTO -> Post Entity
-    public static Post toPost(PostReqDTO.CreatePostRequestDTO reqDTO) {
+    public static Post toPost(BoardType boardType, PostReqDTO.CreatePostRequestDTO reqDTO, User user) {
         return Post.builder()
                 .title(reqDTO.title())
                 .content(reqDTO.content())
                 .likeNum(0L)
+                .boardType(boardType)
+                .user(user)
                 .build();
     }
 
@@ -36,21 +40,23 @@ public class PostConverter {
                 .title(post.getTitle())
                 .content(post.getContent())
                 .likeNum(post.getLikeNum())
+                .author(post.getUser().getNickname())
+                .commentNum((long) post.getComments().size()) // 댓글 수
                 .createdAt(post.getCreatedAt())
                 .updatedAt(post.getUpdatedAt())
                 .build();
     }
 
     // Post Entities -> PostPreviewListDTO
-    public static PostResDTO.PostPreviewListDTO toPostPreviewListDTO(List<Post> posts) {
-        List<PostResDTO.PostPreviewDTO> previewDTOList = posts.stream()
-                .map(PostConverter::toPostPreviewDTO)
-                .collect(Collectors.toList());
-
-        return PostResDTO.PostPreviewListDTO.builder()
-                .postPreviewDTOList(previewDTOList)
-                .build();
-    }
+//    public static PostResDTO.PostPreviewListDTO toPostPreviewListDTO(List<Post> posts) {
+//        List<PostResDTO.PostPreviewDTO> previewDTOList = posts.stream()
+//                .map(PostConverter::toPostPreviewDTO)
+//                .collect(Collectors.toList());
+//
+//        return PostResDTO.PostPreviewListDTO.builder()
+//                .postPreviewDTOList(previewDTOList)
+//                .build();
+//    }
 
     // Post Entity -> UpdatePostResponseDTO
     public static PostResDTO.UpdatePostResponseDTO toUpdatePostResponseDTO(Post post) {

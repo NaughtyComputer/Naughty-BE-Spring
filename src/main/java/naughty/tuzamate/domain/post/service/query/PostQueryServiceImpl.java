@@ -4,11 +4,16 @@ import lombok.RequiredArgsConstructor;
 import naughty.tuzamate.domain.post.converter.PostConverter;
 import naughty.tuzamate.domain.post.dto.PostResDTO;
 import naughty.tuzamate.domain.post.entity.Post;
+import naughty.tuzamate.domain.post.enums.BoardType;
 import naughty.tuzamate.domain.post.repository.PostRepository;
 import naughty.tuzamate.global.error.GeneralErrorCode;
 import naughty.tuzamate.global.error.exception.CustomException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -17,8 +22,6 @@ public class PostQueryServiceImpl implements PostQueryService {
 
     private final PostRepository postRepository;
 
-
-    // Post error 코드 및 exception만들기!!!!!!
     @Override
     public PostResDTO.PostPreviewDTO getPost(Long postId) {
         Post post = postRepository.findById(postId)
@@ -28,7 +31,21 @@ public class PostQueryServiceImpl implements PostQueryService {
     }
 
     @Override
-    public PostResDTO.PostPreviewListDTO getPostList() {
-        return PostConverter.toPostPreviewListDTO(postRepository.findAll());
+    public PostResDTO.PostPreviewListDTO getPostList(BoardType boardType, Long cursor, int size) {
+        PageRequest pr = PageRequest.of(0, size);
+        Slice<Post> slice = postRepository.findByBoardTypeAndCursor(boardType, cursor, pr);
+
+        List<PostResDTO.PostPreviewDTO> previews = slice.getContent()
+                .stream()
+                .map(PostConverter::toPostPreviewDTO)
+                .toList();
+
+        Long nextCursor = slice.hasNext() ? previews.get(previews.size() - 1).id() : null;
+
+        return PostResDTO.PostPreviewListDTO.builder()
+                .postPreviewDTOList(previews)
+                .nextCursor(nextCursor)
+                .hasNext(slice.hasNext())
+                .build();
     }
 }

@@ -1,10 +1,12 @@
 package naughty.tuzamate.domain.post.service.command;
 
 import lombok.RequiredArgsConstructor;
+import naughty.tuzamate.auth.principal.PrincipalDetails;
 import naughty.tuzamate.domain.post.converter.PostConverter;
 import naughty.tuzamate.domain.post.dto.PostReqDTO;
 import naughty.tuzamate.domain.post.dto.PostResDTO;
 import naughty.tuzamate.domain.post.entity.Post;
+import naughty.tuzamate.domain.post.enums.BoardType;
 import naughty.tuzamate.domain.post.repository.PostRepository;
 import naughty.tuzamate.domain.postLike.entity.PostLike;
 import naughty.tuzamate.domain.postLike.repository.PostLikeRepository;
@@ -28,9 +30,11 @@ public class PostCommandServiceImpl implements PostCommandService {
     private final PostScrapRepository postScrapRepository;
 
     @Override
-    public PostResDTO.CreatePostResponseDTO createPost(PostReqDTO.CreatePostRequestDTO reqDTO) {
+    public PostResDTO.CreatePostResponseDTO createPost(BoardType boardType, PostReqDTO.CreatePostRequestDTO reqDTO, PrincipalDetails principalDetails) {
         // reqDTO -> Post Entity 로 변환, Post Entity -> resDTO 로 return
-        Post post = PostConverter.toPost(reqDTO);
+        User user = userRepository.getReferenceById(principalDetails.getId());
+        Post post = PostConverter.toPost(boardType, reqDTO, user);
+
         postRepository.save(post);
 
         return PostConverter.toCreatePostResponseDTO(post);
@@ -63,17 +67,21 @@ public class PostCommandServiceImpl implements PostCommandService {
     }
 
     @Override
-    public String postLike(Long postId, Long userId) {
+    public String postLike(Long postId, PrincipalDetails principalDetails) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
-        User user = userRepository.findById(userId)
+        User user = userRepository.findById(principalDetails.getId())
                 .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
 
         if (postLikeRepository.existsByPostAndUser(post, user)) {
             throw new CustomException(GeneralErrorCode.ALREADY_LIKED);
         }
 
-        PostLike like = PostLike.builder().post(post).user(user).build();
+        PostLike like = PostLike.builder()
+                .post(post)
+                .user(user)
+                .build();
+
         postLikeRepository.save(like);
 
         post.increaseLike();
@@ -82,10 +90,10 @@ public class PostCommandServiceImpl implements PostCommandService {
     }
 
     @Override
-    public String deleteLike(Long postId, Long userId) {
+    public String deleteLike(Long postId, PrincipalDetails principalDetails) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
-        User user = userRepository.findById(userId)
+        User user = userRepository.findById(principalDetails.getId())
                 .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
 
         PostLike like = postLikeRepository.findByPostAndUser(post, user);
@@ -97,10 +105,10 @@ public class PostCommandServiceImpl implements PostCommandService {
     }
 
     @Override
-    public String postScrap(Long postId, Long userId) {
+    public String postScrap(Long postId, PrincipalDetails principalDetails) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
-        User user = userRepository.findById(userId)
+        User user = userRepository.findById(principalDetails.getId())
                 .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
 
         if (postScrapRepository.existsByPostAndUser(post, user)) {
@@ -114,10 +122,10 @@ public class PostCommandServiceImpl implements PostCommandService {
     }
 
     @Override
-    public String deleteScrap(Long postId, Long userId) {
+    public String deleteScrap(Long postId, PrincipalDetails principalDetails) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
-        User user = userRepository.findById(userId)
+        User user = userRepository.findById(principalDetails.getId())
                 .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
 
         PostScrap scrap = postScrapRepository.findByPostAndUser(post, user);
