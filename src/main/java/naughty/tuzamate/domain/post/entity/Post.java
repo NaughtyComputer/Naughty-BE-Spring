@@ -3,6 +3,7 @@ package naughty.tuzamate.domain.post.entity;
 import jakarta.persistence.*;
 import lombok.*;
 import naughty.tuzamate.domain.comment.entity.Comment;
+import naughty.tuzamate.domain.community.CommunityItem;
 import naughty.tuzamate.domain.postLike.entity.PostLike;
 import naughty.tuzamate.global.BaseTimeEntity;
 import naughty.tuzamate.domain.user.entity.User;
@@ -16,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-public class Post extends BaseTimeEntity {
+public class Post extends BaseTimeEntity implements CommunityItem {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,5 +56,14 @@ public class Post extends BaseTimeEntity {
     public void addComment(Comment comment) {
         comments.add(comment);
         comment.setPost(this);
+    }
+
+    @Override
+    public Long getCursorId() {
+        return this.id;
+    }
+    @Override
+    public Post getPost() {
+        return this;
     }
 }
