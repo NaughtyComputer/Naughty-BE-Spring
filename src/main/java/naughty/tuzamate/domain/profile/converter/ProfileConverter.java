@@ -43,8 +43,8 @@ public class ProfileConverter {
 
         return ProfileResponseDTO.profileCommunityResponse.builder()
                 .postId(post.getId())
-                .title(post.getPost().getTitle())
-                .contentPreview(post.getPost().getContent().length() > 20 ? post.getPost().getContent().substring(0, 20) + "..." : post.getPost().getContent())
+                .title(post.getTitle())
+                .contentPreview(post.getContent().length() > 20 ? post.getContent().substring(0, 20) + "..." : post.getPost().getContent())
                 .build();
     }
 
