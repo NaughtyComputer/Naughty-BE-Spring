@@ -32,15 +32,15 @@ public class ProfileResponseDTO {
     ) {}
 
     @Builder
-    public record scrapResponse(
+    public record profileCommunityResponse(
             Long postId,
             String title,
             String contentPreview
     ) {}
 
     @Builder
-    public record scrapListResponse(
-            List<scrapResponse> scraps,
+    public record profileCommunityListResponse(
+            List<profileCommunityResponse> scraps,
             boolean hasNextPage,
             Long cursor
     ) {}

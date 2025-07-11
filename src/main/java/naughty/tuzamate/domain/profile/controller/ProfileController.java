@@ -60,9 +60,25 @@ public class ProfileController {
             @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
             @RequestParam(value = "offset", defaultValue = "10") int offset) {
 
-        ProfileResponseDTO.scrapListResponse scrapList = profileQueryService.getScrapList(user, cursor, offset);
+        ProfileResponseDTO.profileCommunityListResponse scrapList = profileQueryService.getScrapList(user, cursor, offset);
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, scrapList);
 
+    }
+
+    @GetMapping("/likes")
+    @Operation(summary = "좋아요한 게시글 조회")
+    @Parameters({
+            @Parameter(name = "cursor", description = "좋아요 목록의 커서 값. 처음 조회 시 0을 입력", required = false, example = "0"),
+            @Parameter(name = "offset", description = "한 번에 가져올 좋아요 개수. 기본 값은 10", required = false, example = "10")
+    })
+    public CustomResponse<?> getLikeList(
+            @UserInfo User user,
+            @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
+            @RequestParam(value = "offset", defaultValue = "10") int offset) {
+
+        ProfileResponseDTO.profileCommunityListResponse likeList = profileQueryService.getLikeList(user, cursor, offset);
+
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK, likeList);
     }
 }

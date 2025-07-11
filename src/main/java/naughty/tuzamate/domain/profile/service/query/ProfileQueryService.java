@@ -1,6 +1,8 @@
 package naughty.tuzamate.domain.profile.service.query;
 
 import lombok.RequiredArgsConstructor;
+import naughty.tuzamate.domain.postLike.entity.PostLike;
+import naughty.tuzamate.domain.postLike.repository.PostLikeRepository;
 import naughty.tuzamate.domain.postScrap.entity.PostScrap;
 import naughty.tuzamate.domain.postScrap.repository.PostScrapRepository;
 import naughty.tuzamate.domain.profile.converter.ProfileConverter;
@@ -22,13 +24,14 @@ public class ProfileQueryService {
 
     private final UserRepository userRepository;
     private final PostScrapRepository postScrapRepository;
+    private final PostLikeRepository postLikeRepository;
 
     public User getProfile(Long userId) {
 
         return userRepository.findById(userId).orElseThrow(() -> new UserCustomException(UserErrorCode.USER_NOT_FOUND));
     }
 
-    public ProfileResponseDTO.scrapListResponse getScrapList(User user, Long cursor, int offset) {
+    public ProfileResponseDTO.profileCommunityListResponse getScrapList(User user, Long cursor, int offset) {
 
         Pageable pageable = PageRequest.of(0, offset);
 
@@ -40,6 +43,20 @@ public class ProfileQueryService {
             postScraps = postScrapRepository.findScrapListByUserIdLessThanOrderByIdDesc(user.getId(), cursor, pageable);
         }
 
-        return ProfileConverter.toScrapListResponse(postScraps);
+        return ProfileConverter.toProfileCommunityListDTO(postScraps);
+    }
+
+    public ProfileResponseDTO.profileCommunityListResponse getLikeList(User user, Long cursor, int offset) {
+        Pageable pageable = PageRequest.of(0, offset);
+
+        Slice<PostLike> postLikes = null;
+
+        if (cursor == 0) {
+            postLikes = postLikeRepository.findLikeListByUserIdOrderByIdDesc(user.getId(), pageable);
+        } else {
+            postLikes = postLikeRepository.findLikeListByUserIdLessThanOrderByIdDesc(user.getId(), cursor, pageable);
+        }
+
+        return ProfileConverter.toProfileCommunityListDTO(postLikes);
     }
 }
