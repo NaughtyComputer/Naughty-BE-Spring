@@ -35,26 +35,29 @@ public class CommentConverter {
     }
 
     // Comment Entity -> CommentPreviewDTO
-    public static CommentResDTO.CommentPreviewDTO toCommentPreviewDTO(Comment comment) {
+    public static CommentResDTO.CommentPreviewDTO toCommentPreviewDTO(Comment comment, List<Comment> children) {
         return CommentResDTO.CommentPreviewDTO.builder()
                 .id(comment.getId())
                 .postId(comment.getPost().getId())
-                .parentId(comment.getParent().getId())
+                .parentId(comment.getParent() != null ? comment.getParent().getId() : null)
                 .content(comment.getContent())
                 .writerName(comment.getUser().getNickname())
                 .createdAt(comment.getCreatedAt())
                 .updatedAt(comment.getUpdatedAt())
+                .children(children.stream()
+                        .map(child -> toCommentPreviewDTO(child, List.of()))
+                        .collect(Collectors.toList()))
                 .build();
     }
 
     // List<Comment> -> CommentPreviewListDTO
-    public static CommentResDTO.CommentPreviewListDTO toCommentPreviewListDTO(List<Comment> comments) {
-
-        List<CommentResDTO.CommentPreviewDTO> commentPreviewDTOS = comments.stream()
-                .map(CommentConverter::toCommentPreviewDTO).collect(Collectors.toList());
+    public static CommentResDTO.CommentPreviewListDTO toCommentPreviewListDTO(
+            List<CommentResDTO.CommentPreviewDTO> previewList, boolean hasNext, Long nextCursor) {
 
         return CommentResDTO.CommentPreviewListDTO.builder()
-                .commentPreviewListDTO(commentPreviewDTOS)
+                .commentPreviewListDTO(previewList)
+                .nextCursor(nextCursor)
+                .hasNext(hasNext)
                 .build();
     }
 
