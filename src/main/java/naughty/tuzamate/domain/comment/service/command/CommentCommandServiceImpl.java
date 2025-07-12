@@ -1,6 +1,7 @@
 package naughty.tuzamate.domain.comment.service.command;
 
 import lombok.RequiredArgsConstructor;
+import naughty.tuzamate.auth.principal.PrincipalDetails;
 import naughty.tuzamate.domain.comment.converter.CommentConverter;
 import naughty.tuzamate.domain.comment.dto.CommentReqDTO;
 import naughty.tuzamate.domain.comment.dto.CommentResDTO;
@@ -25,11 +26,13 @@ public class CommentCommandServiceImpl implements CommentCommandService {
     private final PostRepository postRepository;
 
     @Override
-    public CommentResDTO.CreateCommentResponseDTO createComment(CommentReqDTO.CreateCommentRequestDTO reqDTO) {
-        User user = userRepository.findById(reqDTO.userId())
+    public CommentResDTO.CreateCommentResponseDTO createComment(
+            CommentReqDTO.CreateCommentRequestDTO reqDTO, Long postId, PrincipalDetails principalDetails
+    ) {
+        User user = userRepository.findById(principalDetails.getId())
                 .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
 
-        Post post = postRepository.findById(reqDTO.postId())
+        Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
 
         Comment parent = null;
