@@ -1,4 +1,4 @@
-package naughty.tuzamate.global.annotation;
+package naughty.tuzamate.auth.annotation;
 
 import io.swagger.v3.oas.annotations.Parameter;
 

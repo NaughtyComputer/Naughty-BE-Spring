@@ -1,10 +1,9 @@
 package naughty.tuzamate.global.config;
 
 import lombok.RequiredArgsConstructor;
-import naughty.tuzamate.global.resolver.UserInfoResolver;
+import naughty.tuzamate.auth.resolver.UserInfoResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.reactive.function.client.WebClient;
