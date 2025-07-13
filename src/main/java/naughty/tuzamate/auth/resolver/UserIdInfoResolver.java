@@ -37,10 +37,16 @@ public class UserIdInfoResolver implements HandlerMethodArgumentResolver {
 
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        if (authentication == null && !authentication.isAuthenticated()) {
+        if (authentication == null || !authentication.isAuthenticated()) {
             throw new UserCustomException(UserErrorCode.UNAUTHORIZED_USER);
         }
 
+        /**
+         * jwt Filter 에서 jwt 추출
+         * token 검증
+         * 검증 후, Authentication 객체 생성
+         * SecurityContext에 Authentication 객체 저장
+         */
 
         // principal은 PrincipalDetails 객체임
         Object principal = authentication.getPrincipal();
@@ -52,12 +58,13 @@ public class UserIdInfoResolver implements HandlerMethodArgumentResolver {
             return principalDetails.getId();
         }
 
+        // anonymousUser는 Spring Security에서 인증되지 않은 사용자를 나타내는 기본 문자열 이라고 한다.
         if (principal == null || "anonymousUser".equals(principal.toString())) {
             throw new UserCustomException(UserErrorCode.UNAUTHORIZED_USER);
         }
 
         // principal이 UserDetails가 아닌 경우
-        throw new CustomException(UserErrorCode.INVALID_USER_ID_FORMAT);
+        throw new UserCustomException(UserErrorCode.INVALID_USER_ID_FORMAT);
 
 
 
