@@ -1,6 +1,7 @@
 package naughty.tuzamate.global.config;
 
 import lombok.RequiredArgsConstructor;
+import naughty.tuzamate.auth.resolver.UserIdInfoResolver;
 import naughty.tuzamate.auth.resolver.UserInfoResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ import java.util.List;
 public class WebConfig implements WebMvcConfigurer {
 
     private final UserInfoResolver userInfoResolver;
+    private final UserIdInfoResolver userIdInfoResolver;
 
     @Bean
 
@@ -31,5 +33,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> resolvers) {
         resolvers.add(userInfoResolver);
+        resolvers.add(userIdInfoResolver);
     }
 }
