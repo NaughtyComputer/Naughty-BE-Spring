@@ -159,7 +159,7 @@ public class JwtProvider {
     }
 
     public Long getUserId(String token) {
-        return getClaims(token).getBody().get("id", Long.class);
+        return getClaims(token).getPayload().get("id", Long.class);
     }
 
     public int getTokenVersion(String token) {
