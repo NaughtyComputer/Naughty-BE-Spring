@@ -1,13 +1,11 @@
-package naughty.tuzamate.global.resolver;
+package naughty.tuzamate.auth.resolver;
 
-import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
-import naughty.tuzamate.auth.jwt.error.JwtErrorCode;
 import naughty.tuzamate.domain.user.entity.User;
 import naughty.tuzamate.domain.user.error.UserErrorCode;
 import naughty.tuzamate.domain.user.error.exception.UserCustomException;
 import naughty.tuzamate.domain.user.repository.UserRepository;
-import naughty.tuzamate.global.annotation.UserInfo;
+import naughty.tuzamate.auth.annotation.UserInfo;
 import org.springframework.core.MethodParameter;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
