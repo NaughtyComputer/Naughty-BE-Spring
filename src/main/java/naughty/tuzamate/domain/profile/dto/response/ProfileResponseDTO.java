@@ -2,6 +2,8 @@ package naughty.tuzamate.domain.profile.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import naughty.tuzamate.domain.user.dto.UserInitProfileRequestDTO;
+import naughty.tuzamate.domain.user.entity.User;
 import org.springframework.data.domain.Slice;
 
 import java.util.List;
@@ -16,7 +18,7 @@ public class ProfileResponseDTO {
     @Builder
     public record getProfileResponse(
             Long age,
-            boolean experience,
+            String experience,
             String email,
             String nickname,
             String funding_situation,
@@ -44,6 +46,15 @@ public class ProfileResponseDTO {
             boolean hasNextPage,
             Long cursor
     ) {}
+
+    public record profileInitResponse(
+            String nickname,
+            String experience
+    ) {
+        public static profileInitResponse of(User user) {
+            return new profileInitResponse(user.getNickname(), user.getExperience());
+        }
+    }
 
 
 
