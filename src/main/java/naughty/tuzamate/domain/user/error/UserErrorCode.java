@@ -18,7 +18,7 @@ public enum UserErrorCode implements BaseErrorCode {
     UNAUTHORIZED_USER(HttpStatus.UNAUTHORIZED, "USER401", "인증되지 않은 사용자입니다."),
     LOGGED_OUT_USER(HttpStatus.UNAUTHORIZED, "USER40101", "로그아웃된 사용자입니다. 다시 로그인 해주세요."),
     INVALID_USER_ID_FORMAT(HttpStatus.BAD_REQUEST, "USER40001", "유효하지 않은 사용자 ID 형식입니다."),
-
+    ALREADY_INIT_PROFILE(HttpStatus.BAD_REQUEST, "USER40002", "이미 프로필이 초기화되어 있습니다.")
     ;
 
 
