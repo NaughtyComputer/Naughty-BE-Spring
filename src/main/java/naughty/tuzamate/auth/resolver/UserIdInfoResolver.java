@@ -21,8 +21,6 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 @RequiredArgsConstructor
 public class UserIdInfoResolver implements HandlerMethodArgumentResolver {
 
-    private final JwtProvider jwtProvider;
-    private final UserRepository userRepository;
 
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
