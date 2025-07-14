@@ -33,6 +33,11 @@ public class ProfileCommandService {
         if (user.getNickname() != null || user.getExperience() != null) {
             throw new UserCustomException(UserErrorCode.ALREADY_INIT_PROFILE);
         }
+
+        if (userRepository.existsByNickname(dto.nickname())) {
+            throw new UserCustomException(UserErrorCode.USER_NICKNAME_ALREADY_EXISTS);
+        }
+
         user.initProfile(dto.nickname(), dto.experience());
         userRepository.save(user);
 
