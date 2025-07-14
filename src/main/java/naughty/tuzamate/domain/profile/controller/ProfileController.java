@@ -5,20 +5,15 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import naughty.tuzamate.auth.principal.PrincipalDetails;
 import naughty.tuzamate.domain.profile.converter.ProfileConverter;
 import naughty.tuzamate.domain.profile.dto.request.ProfileRequestDTO;
 import naughty.tuzamate.domain.profile.dto.response.ProfileResponseDTO;
 import naughty.tuzamate.domain.profile.service.command.ProfileCommandService;
 import naughty.tuzamate.domain.profile.service.query.ProfileQueryService;
-import naughty.tuzamate.domain.user.dto.UserResponseDTO;
 import naughty.tuzamate.domain.user.entity.User;
-import naughty.tuzamate.domain.user.error.UserErrorCode;
-import naughty.tuzamate.global.annotation.UserInfo;
+import naughty.tuzamate.auth.annotation.UserInfo;
 import naughty.tuzamate.global.apiPayload.CustomResponse;
 import naughty.tuzamate.global.success.GeneralSuccessCode;
-import org.springframework.data.domain.Slice;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "프로필 API")
