@@ -23,7 +23,7 @@ public class ProfileConverter {
 
         return ProfileResponseDTO.getProfileResponse.builder()
                 .age(user.getAge())
-                .experience(user.isExperience())
+                .experience(user.getExperience())
                 .email(user.getEmail())
                 .nickname(user.getNickname())
                 .funding_situation(user.getFundingSituation())

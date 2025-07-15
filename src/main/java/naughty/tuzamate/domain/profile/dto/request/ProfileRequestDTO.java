@@ -6,7 +6,7 @@ public record ProfileRequestDTO(
     @NotNull(message = "나이를 입력해주세요")
     Long age,
     @NotNull(message = "투자 경험을 입력해주세요")
-    boolean experience,
+    String experience,
     @NotNull(message = "닉네임을 입력해주세요")
     String nickname,
     @NotNull(message = "자금 상황을 입력해주세요")
