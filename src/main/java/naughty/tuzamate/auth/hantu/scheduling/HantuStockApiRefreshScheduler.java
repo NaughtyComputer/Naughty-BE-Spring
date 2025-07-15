@@ -9,14 +9,14 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- * 스케줄링 실행시키는 값은 application.yml에 있으며ㄴ
+ * 스케줄링 실행시키는 값은 application.yml에 있으며
  * enabled 값이 true인 경우에만 실행될 수 있도록 구성
  */
 
 @RequiredArgsConstructor
 @Component
 @Slf4j
-@ConditionalOnProperty(name = "hantu.token.schedule.enabled", havingValue = "true")
+@ConditionalOnProperty(name = "hantu.stock.schedule.enabled", havingValue = "true")
 public class HantuStockApiRefreshScheduler {
 
     private final KrxService krxService;
