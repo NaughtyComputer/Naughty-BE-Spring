@@ -26,7 +26,7 @@ public class User extends BaseTimeEntity {
     private Long age;
 
     @Column(name = "investment_experience")
-    private boolean experience;
+    private String experience;
 
     private String email;
 
@@ -82,5 +82,9 @@ public class User extends BaseTimeEntity {
         this.nickname = nickname;
     }
 
+    public void initProfile(String nickname, String experience) {
+        this.nickname = nickname;
+        this.experience = experience;
+    }
 
 }

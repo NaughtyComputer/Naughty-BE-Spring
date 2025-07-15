@@ -4,12 +4,14 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import naughty.tuzamate.domain.profile.converter.ProfileConverter;
 import naughty.tuzamate.domain.profile.dto.request.ProfileRequestDTO;
 import naughty.tuzamate.domain.profile.dto.response.ProfileResponseDTO;
 import naughty.tuzamate.domain.profile.service.command.ProfileCommandService;
 import naughty.tuzamate.domain.profile.service.query.ProfileQueryService;
+import naughty.tuzamate.domain.user.dto.UserInitProfileRequestDTO;
 import naughty.tuzamate.domain.user.entity.User;
 import naughty.tuzamate.auth.annotation.UserInfo;
 import naughty.tuzamate.global.apiPayload.CustomResponse;
@@ -24,6 +26,19 @@ public class ProfileController {
 
     private final ProfileCommandService profileCommandService;
     private final ProfileQueryService profileQueryService;
+
+    @PostMapping("/init-profile")
+    @Operation(summary = "프로필 초기 설정", description = "닉네임, 재테크 수준을 받아 초기 프로필을 설정한다.")
+    public CustomResponse<?> initProfile(
+            @UserInfo User user,
+            @Valid @RequestBody UserInitProfileRequestDTO requestDTO) {
+
+        ProfileResponseDTO.profileInitResponse response = profileCommandService.initProfile(user, requestDTO);
+
+        return CustomResponse.onSuccess(GeneralSuccessCode.CREATED, response);
+
+    }
+
 
     @PutMapping("/{userId}")
     @Operation(summary = "프로필 수정")
