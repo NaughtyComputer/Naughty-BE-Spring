@@ -1,4 +1,4 @@
-package naughty.tuzamate.auth.hantu;
+package naughty.tuzamate.auth.hantu.scheduling;
 
 
 import jakarta.annotation.PostConstruct;
