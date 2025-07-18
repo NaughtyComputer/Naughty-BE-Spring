@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Parameters;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import naughty.tuzamate.auth.annotation.UserIdInfo;
 import naughty.tuzamate.domain.profile.converter.ProfileConverter;
 import naughty.tuzamate.domain.profile.dto.request.ProfileRequestDTO;
 import naughty.tuzamate.domain.profile.dto.response.ProfileResponseDTO;
@@ -40,12 +41,12 @@ public class ProfileController {
     }
 
 
-    @PutMapping("/{userId}")
+    @PutMapping("")
     @Operation(summary = "프로필 수정")
-    public CustomResponse<?> updateProfile(@PathVariable("userId") Long userId,
+    public CustomResponse<?> updateProfile(@UserInfo User user ,
                                            @RequestBody ProfileRequestDTO requestDTO) {
 
-        User updateUser = profileCommandService.updateProfile(userId, requestDTO);
+        User updateUser = profileCommandService.updateProfile(user, requestDTO);
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, ProfileConverter.toProfileResponseDTO(updateUser));
     }
 
@@ -64,11 +65,11 @@ public class ProfileController {
             @Parameter(name = "offset", description = "한 번에 가져올 스크랩 개수. 기본 값은 10", required = false, example = "10")
     })
     public CustomResponse<?> getScrapList(
-            @UserInfo User user,
+            @UserIdInfo Long userId,
             @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
             @RequestParam(value = "offset", defaultValue = "10") int offset) {
 
-        ProfileResponseDTO.profileCommunityListResponse scrapList = profileQueryService.getScrapList(user, cursor, offset);
+        ProfileResponseDTO.profileCommunityListResponse scrapList = profileQueryService.getScrapList(userId, cursor, offset);
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, scrapList);
 
@@ -81,11 +82,11 @@ public class ProfileController {
             @Parameter(name = "offset", description = "한 번에 가져올 좋아요 개수. 기본 값은 10", required = false, example = "10")
     })
     public CustomResponse<?> getLikeList(
-            @UserInfo User user,
+            @UserIdInfo Long userId,
             @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
             @RequestParam(value = "offset", defaultValue = "10") int offset) {
 
-        ProfileResponseDTO.profileCommunityListResponse likeList = profileQueryService.getLikeList(user, cursor, offset);
+        ProfileResponseDTO.profileCommunityListResponse likeList = profileQueryService.getLikeList(userId, cursor, offset);
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, likeList);
     }
@@ -97,11 +98,11 @@ public class ProfileController {
             @Parameter(name = "offset", description = "한 번에 가져올 게시글 개수. 기본 값은 10", required = false, example = "10")
     })
     public CustomResponse<?> getPostList(
-            @UserInfo User user,
+            @UserIdInfo Long userId,
             @RequestParam(value = "cursor", defaultValue = "0") Long cursor,
             @RequestParam(value = "offset", defaultValue = "10") int offset) {
 
-        ProfileResponseDTO.profileCommunityListResponse postList = profileQueryService.getPostList(user, cursor, offset);
+        ProfileResponseDTO.profileCommunityListResponse postList = profileQueryService.getPostList(userId, cursor, offset);
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, postList);
     }
