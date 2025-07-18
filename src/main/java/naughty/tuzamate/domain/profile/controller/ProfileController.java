@@ -50,12 +50,10 @@ public class ProfileController {
     }
 
     @GetMapping("")
-    @Operation(summary = "프로필 조회")
+    @Operation(summary = "프로필 기본 조회")
     public CustomResponse<?> getProfile(@UserInfo User user) {
 
-        User getUser = profileQueryService.getProfile(user.getId());
-
-        return CustomResponse.onSuccess(GeneralSuccessCode.OK, ProfileConverter.from(getUser));
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK, ProfileConverter.from(user));
 
     }
 
