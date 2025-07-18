@@ -29,44 +29,44 @@ public class ProfileQueryService {
     private final PostLikeRepository postLikeRepository;
     private final PostRepository postRepository;
 
-    public ProfileResponseDTO.profileCommunityListResponse getScrapList(User user, Long cursor, int offset) {
+    public ProfileResponseDTO.profileCommunityListResponse getScrapList(Long userId, Long cursor, int offset) {
 
         Pageable pageable = PageRequest.of(0, offset);
 
         Slice<PostScrap> postScraps = null;
 
         if (cursor == 0) {
-            postScraps = postScrapRepository.findScrapListByUserIdOrderByIdDesc(user.getId(), pageable);
+            postScraps = postScrapRepository.findScrapListByUserIdOrderByIdDesc(userId, pageable);
         } else {
-            postScraps = postScrapRepository.findScrapListByUserIdLessThanOrderByIdDesc(user.getId(), cursor, pageable);
+            postScraps = postScrapRepository.findScrapListByUserIdLessThanOrderByIdDesc(userId, cursor, pageable);
         }
 
         return ProfileConverter.toProfileCommunityListDTO(postScraps);
     }
 
-    public ProfileResponseDTO.profileCommunityListResponse getLikeList(User user, Long cursor, int offset) {
+    public ProfileResponseDTO.profileCommunityListResponse getLikeList(Long userId, Long cursor, int offset) {
         Pageable pageable = PageRequest.of(0, offset);
 
         Slice<PostLike> postLikes = null;
 
         if (cursor == 0) {
-            postLikes = postLikeRepository.findLikeListByUserIdOrderByIdDesc(user.getId(), pageable);
+            postLikes = postLikeRepository.findLikeListByUserIdOrderByIdDesc(userId, pageable);
         } else {
-            postLikes = postLikeRepository.findLikeListByUserIdLessThanOrderByIdDesc(user.getId(), cursor, pageable);
+            postLikes = postLikeRepository.findLikeListByUserIdLessThanOrderByIdDesc(userId, cursor, pageable);
         }
 
         return ProfileConverter.toProfileCommunityListDTO(postLikes);
     }
 
-    public ProfileResponseDTO.profileCommunityListResponse getPostList(User user, Long cursor, int offset) {
+    public ProfileResponseDTO.profileCommunityListResponse getPostList(Long userId, Long cursor, int offset) {
         Pageable pageable = PageRequest.of(0, offset);
 
         Slice<Post> posts = null;
 
         if (cursor == 0) {
-            posts = postRepository.findPostListByUserIdOrderByIdDesc(user.getId(), pageable);
+            posts = postRepository.findPostListByUserIdOrderByIdDesc(userId, pageable);
         } else {
-            posts = postRepository.findPostListByUserIdLessThanOrderByIdDesc(user.getId(), cursor, pageable);
+            posts = postRepository.findPostListByUserIdLessThanOrderByIdDesc(userId, cursor, pageable);
         }
 
         return ProfileConverter.toProfileCommunityListDTO(posts);
