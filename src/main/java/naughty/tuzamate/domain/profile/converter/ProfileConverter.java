@@ -22,20 +22,16 @@ public class ProfileConverter {
     public static ProfileResponseDTO.getProfileResponse from(User user) {
 
         return ProfileResponseDTO.getProfileResponse.builder()
-                .age(user.getAge())
-                .experience(user.getExperience())
-                .email(user.getEmail())
-                .nickname(user.getNickname())
-                .funding_situation(user.getFundingSituation())
-                .income(user.getIncome())
-                .stability(user.getStability())
-                .source(user.getSource())
-                .type(user.getType())
-                .proportion(user.getProportion())
-                .period(user.getPeriod())
-                .expected_income(user.getExpectedIncome())
-                .expected_loss(user.getExpectedLoss())
-                .purpose(user.getPurpose())
+                .myInfo(ProfileResponseDTO.MyInfo.builder()
+                        .nickname(user.getNickname())
+                        .gender(user.getGender())
+                        .email(user.getEmail())
+                        .build())
+                .investmentInfo(ProfileResponseDTO.InvestmentInfo.builder()
+                        .income(user.getIncome())
+                        .type(user.getType())
+                        .purpose(user.getProportion())
+                        .build())
                 .build();
     }
 
