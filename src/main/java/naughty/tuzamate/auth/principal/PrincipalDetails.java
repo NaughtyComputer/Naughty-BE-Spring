@@ -59,4 +59,8 @@ public class PrincipalDetails implements UserDetails {
     public boolean isCredentialsNonExpired() {
         return true;
     }
+
+    public User getUser() {
+        return user;
+    }
 }

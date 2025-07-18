@@ -29,11 +29,6 @@ public class ProfileQueryService {
     private final PostLikeRepository postLikeRepository;
     private final PostRepository postRepository;
 
-    public User getProfile(Long userId) {
-
-        return userRepository.findById(userId).orElseThrow(() -> new UserCustomException(UserErrorCode.USER_NOT_FOUND));
-    }
-
     public ProfileResponseDTO.profileCommunityListResponse getScrapList(User user, Long cursor, int offset) {
 
         Pageable pageable = PageRequest.of(0, offset);
