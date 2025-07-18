@@ -69,7 +69,7 @@ class ProfileQueryServiceTest {
                     .thenReturn(expectedResponse);
 
             // when
-            ProfileResponseDTO.profileCommunityListResponse actualResponse = profileQueryService.getScrapList(user, cursor, offset);
+            ProfileResponseDTO.profileCommunityListResponse actualResponse = profileQueryService.getScrapList(user.getId(), cursor, offset);
 
             // then
             Assertions.assertThat(actualResponse).isSameAs(expectedResponse);
@@ -102,7 +102,7 @@ class ProfileQueryServiceTest {
                 .thenReturn(postScraps);
 
         // when
-        ProfileResponseDTO.profileCommunityListResponse actualResponse = profileQueryService.getScrapList(user, cursor, offset);
+        ProfileResponseDTO.profileCommunityListResponse actualResponse = profileQueryService.getScrapList(user.getId(), cursor, offset);
 
         // then
         Assertions.assertThat(actualResponse.scraps())
