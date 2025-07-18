@@ -20,9 +20,8 @@ public class ProfileCommandService {
     private final ProfileRepository profileRepository;
     private final UserRepository userRepository;
 
-    public User updateProfile(Long userId, ProfileRequestDTO requestDTO) {
+    public User updateProfile(User user, ProfileRequestDTO requestDTO) {
 
-        User user = userRepository.findById(userId).orElseThrow(() -> new UserCustomException(UserErrorCode.USER_NOT_FOUND));
         user.updateNickname(requestDTO.nickname());
 
         return user;
