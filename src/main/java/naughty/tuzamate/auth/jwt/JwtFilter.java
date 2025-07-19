@@ -57,18 +57,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     throw new CustomException(UserErrorCode.LOGGED_OUT_USER);
                 }
 
-                /*String email = jwtProvider.getEmail(token);
-                UserDetails userDetails = principalDetailsService.loadUserByUsername(email);
-                */
-
                 UserDetails userDetails = new PrincipalDetails(user);
-
-                /*if (userDetails != null) {
-                    Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
-                } else {
-                    throw new UserCustomException(UserErrorCode.USER_NOT_FOUND);
-                }*/
 
                 Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, userDetails.getPassword(), userDetails.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
