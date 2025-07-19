@@ -42,9 +42,6 @@ public class KrxService {
                 KrxDto.FinancialDto currentFinanceOutputDto = krxFinancialService.getCurFinancialInfo(stockCode.getCode());
                 StockInfoDto.InfoDto currentKrxStockInfoDto = stockInfoService.getStockInfo(stockCode.getCode(), "300");
 
-               /* log.info("PER: {}", currentPerPbrOutputDto.getPer());
-                log.info("EPS: {}", currentFinanceOutputDto.getEps());
-                log.info("NAME: {}", currentKrxStockInfoDto.getPrdtAbrvName());*/
 
                 if (filterStrategy.shouldSkipKrx(currentPerPbrOutputDto, currentFinanceOutputDto)) {
                     log.info("PER or PBR or EPS is zero: {}", stockCode.getCode());

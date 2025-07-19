@@ -1,77 +1,4 @@
-package naughty.tuzamate.auth.jwt;//package naughty.tuzamate.auth.jwt;
-//
-//import io.jsonwebtoken.*;
-//import io.jsonwebtoken.security.SecurityException;
-//import lombok.extern.slf4j.Slf4j;
-//import naughty.tuzamate.auth.jwt.error.JwtErrorCode;
-//import naughty.tuzamate.auth.jwt.error.exception.JwtException;
-//import naughty.tuzamate.user.domain.User;
-//import org.springframework.beans.factory.annotation.Value;
-//import org.springframework.stereotype.Component;
-//
-//import javax.crypto.SecretKey;
-//import javax.crypto.spec.SecretKeySpec;
-//import java.nio.charset.StandardCharsets;
-//import java.util.Date;
-//
-//@Component
-//@Slf4j
-//public class JwtProvider {
-//
-//    private SecretKey secretKey;
-//    private long accessExpiration;
-//    private long refreshExpiration;
-//
-//    public JwtProvider(@Value("${jwt.secret}") String secret,
-//                       @Value("${jwt.token.access-expiration-time}") long accessExpiration,
-//                       @Value("${jwt.token.refresh-expiration-time}") long refreshExpiration
-//                       ) {
-//        this.secretKey = new SecretKeySpec(secret.getBytes(StandardCharsets.UTF_8), Jwts.SIG.HS256.key().build().getAlgorithm());
-//        this.accessExpiration = accessExpiration;
-//        this.refreshExpiration = refreshExpiration;
-//    }
-//
-//    public String createAccessToken(User member) {
-//        return createToken(member.getEmail(), this.accessExpiration);
-//    }
-//
-//    public String createRefreshToken(User member) {
-//        return createToken(member.getEmail(), this.refreshExpiration);
-//    }
-//
-//    public String getUserId(String token) {
-//        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("id", String.class);
-//    }
-//
-//    public String getEmail(String token) {
-//        return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().get("email", String.class);
-//    }
-//
-//    public String createToken(String username, long expiration) {
-//
-//        return Jwts.builder()
-//                .claim("role", "ROLE_USER")
-//                .claim("email", username)
-//                .issuedAt(new Date(System.currentTimeMillis()))
-//                .expiration(new Date(System.currentTimeMillis() + expiration))
-//                .signWith(secretKey)
-//                .compact();
-//    }
-//
-//    public Boolean isExpired(String token) {
-//
-//        try {
-//            return Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(token).getPayload().getExpiration()
-//                    .before(new Date());
-//        } catch (SecurityException | MalformedJwtException | UnsupportedJwtException | IllegalArgumentException e) {
-//            throw new JwtException(JwtErrorCode.TOKEN_INVALID);
-//        } catch (ExpiredJwtException e) {
-//            throw new JwtException(JwtErrorCode.TOKEN_EXPIRED);
-//        }
-//    }
-//
-//
-//}
+package naughty.tuzamate.auth.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -151,10 +78,6 @@ public class JwtProvider {
                     .parseClaimsJws(token); // claim 가져오기
         } catch (Exception e) { // parsing하는 과정에서 sign key가 틀리는 등의 이유로 일어나는 Exception
             throw new AuthException(JwtErrorCode.TOKEN_INVALID);
-            // JwtErrorCode와 AuthException은 GeneralException과 BaseErrorCode를 상속받아서 만들어주세요.
-            // 저는 아래와 같이 Code를 만들었습니다.
-            // INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "TOKEN401", "토큰이 유효하지 않습니다."),
-
         }
     }
 

@@ -120,9 +120,6 @@ public class NasdaqService {
                 NasdaqDto.NasdaqInfoDto currentNasdaqInfo = getCurrentNasdaqInfo(stockCode.getCode());
                 StockInfoDto.InfoDto currentStockInfo = stockInfoService.getStockInfo(stockCode.getCode(), "512");
 
-               /* log.info("PER: {}", currentNasdaqInfo.getPerx());
-                log.info("EPS: {}", currentNasdaqInfo.getEpsx());*/
-
                 if (filterStrategy.shouldSkipNasdaq(currentNasdaqInfo)) {
                     log.info("PER or PBR or EPS is zero: {}", stockCode.getCode());
                     continue; // 필터 전략에 의해 스킵된 경우 다음 주식 코드로 넘어감
