@@ -2,8 +2,6 @@ package naughty.tuzamate.domain.profile.converter;
 
 import naughty.tuzamate.domain.community.CommunityItem;
 import naughty.tuzamate.domain.post.entity.Post;
-import naughty.tuzamate.domain.postScrap.entity.PostScrap;
-import naughty.tuzamate.domain.profile.dto.request.ProfileRequestDTO;
 import naughty.tuzamate.domain.profile.dto.response.ProfileResponseDTO;
 import naughty.tuzamate.domain.user.entity.User;
 import org.springframework.data.domain.Slice;
