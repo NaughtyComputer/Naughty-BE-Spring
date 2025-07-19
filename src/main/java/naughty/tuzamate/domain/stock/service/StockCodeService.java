@@ -40,7 +40,7 @@ public class StockCodeService {
         String kosdaqZipUrl = "https://new.real.download.dws.co.kr/common/master/kosdaq_code.mst.zip";
         String nasdaqZipUrl = "https://new.real.download.dws.co.kr/common/master/nasmst.cod.zip";
 
-
+        // 로컬에서 사용시 주석 해제
       /*  String kospiZipPath = "C:\\Users\\namju\\Desktop\\기타 프젝\\주식 저장소\\kospi_code.mst.zip";
         String kosdaqZipPath = "C:\\Users\\namju\\Desktop\\기타 프젝\\주식 저장소\\kosdaq_code.mst.zip";
         String nasdaqZipPath = "C:\\Users\\namju\\Desktop\\기타 프젝\\주식 저장소\\nasmst.cod.zip";
