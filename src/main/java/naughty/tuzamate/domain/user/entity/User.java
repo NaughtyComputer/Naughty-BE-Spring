@@ -78,10 +78,6 @@ public class User extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT")
     private String recentRecommendedProduct; // 최근 추천 상품
 
-    public void updateNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
     public void initProfile(String nickname, String experience) {
         this.nickname = nickname;
         this.experience = experience;

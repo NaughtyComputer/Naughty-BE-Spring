@@ -1,7 +1,6 @@
 package naughty.tuzamate.domain.profile.service.command;
 
 import lombok.RequiredArgsConstructor;
-import naughty.tuzamate.domain.profile.dto.request.ProfileRequestDTO;
 import naughty.tuzamate.domain.profile.dto.response.ProfileResponseDTO;
 import naughty.tuzamate.domain.profile.repository.ProfileRepository;
 import naughty.tuzamate.domain.user.dto.UserInitProfileRequestDTO;
@@ -19,13 +18,6 @@ public class ProfileCommandService {
 
     private final ProfileRepository profileRepository;
     private final UserRepository userRepository;
-
-    public User updateProfile(User user, ProfileRequestDTO requestDTO) {
-
-        user.updateNickname(requestDTO.nickname());
-
-        return user;
-    }
 
     public ProfileResponseDTO.profileInitResponse initProfile(User user, UserInitProfileRequestDTO dto) {
 

@@ -8,7 +8,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import naughty.tuzamate.auth.annotation.UserIdInfo;
 import naughty.tuzamate.domain.profile.converter.ProfileConverter;
-import naughty.tuzamate.domain.profile.dto.request.ProfileRequestDTO;
 import naughty.tuzamate.domain.profile.dto.response.ProfileResponseDTO;
 import naughty.tuzamate.domain.profile.service.command.ProfileCommandService;
 import naughty.tuzamate.domain.profile.service.query.ProfileQueryService;
@@ -38,16 +37,6 @@ public class ProfileController {
 
         return CustomResponse.onSuccess(GeneralSuccessCode.CREATED, response);
 
-    }
-
-
-    @PutMapping("")
-    @Operation(summary = "프로필 수정")
-    public CustomResponse<?> updateProfile(@UserInfo User user ,
-                                           @RequestBody ProfileRequestDTO requestDTO) {
-
-        User updateUser = profileCommandService.updateProfile(user, requestDTO);
-        return CustomResponse.onSuccess(GeneralSuccessCode.OK, ProfileConverter.toProfileResponseDTO(updateUser));
     }
 
     @GetMapping("")
