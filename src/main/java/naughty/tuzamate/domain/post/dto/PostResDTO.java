@@ -23,6 +23,7 @@ public class PostResDTO {
             // 작성자 닉네임, 댓글 수 필드 추가
             String author,
             Long commentNum,
+            boolean is_read,
             LocalDateTime createdAt,
             LocalDateTime updatedAt
     ){
