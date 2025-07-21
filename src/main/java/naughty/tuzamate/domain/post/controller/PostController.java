@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-
 @Tag(name = "게시판 컨트롤러", description = "게시판 관련 API")
 public class PostController {
 

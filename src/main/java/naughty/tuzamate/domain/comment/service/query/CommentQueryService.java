@@ -4,5 +4,5 @@ import naughty.tuzamate.domain.comment.dto.CommentResDTO;
 
 public interface CommentQueryService {
     CommentResDTO.CommentPreviewDTO getComment(Long commentId);
-    CommentResDTO.CommentPreviewListDTO getCommentList(Long postId);
+    CommentResDTO.CommentPreviewListDTO getCommentList(Long postId, Long cursor, int size);
 }
