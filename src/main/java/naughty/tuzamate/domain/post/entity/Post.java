@@ -39,6 +39,8 @@ public class Post extends BaseTimeEntity implements CommunityItem {
     @JoinColumn(name = "user_id")
     private User user;
 
+    private boolean is_read;
+
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
