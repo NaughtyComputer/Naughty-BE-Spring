@@ -42,6 +42,7 @@ public class PostConverter {
                 .likeNum(post.getLikeNum())
                 .author(post.getUser().getNickname())
                 .commentNum((long) post.getComments().size()) // 댓글 수
+                .isRead(post.isRead())
                 .createdAt(post.getCreatedAt())
                 .updatedAt(post.getUpdatedAt())
                 .build();

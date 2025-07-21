@@ -27,6 +27,10 @@ public class PostQueryServiceImpl implements PostQueryService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
 
+        if (post.isRead()) {
+            post.setIsRead();
+        }
+
         return PostConverter.toPostPreviewDTO(post);
     }
 

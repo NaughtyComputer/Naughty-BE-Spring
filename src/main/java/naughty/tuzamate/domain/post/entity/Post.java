@@ -40,7 +40,8 @@ public class Post extends BaseTimeEntity implements CommunityItem {
     private User user;
 
     // is_read의 값은 false로 초기화
-    private boolean is_read = false;
+    @Column(name = "is_read")
+    private boolean isRead = false;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
@@ -72,8 +73,8 @@ public class Post extends BaseTimeEntity implements CommunityItem {
         comment.setPost(this);
     }
 
-    public void is_read() {
-        this.is_read = true;
+    public void setIsRead() {
+        this.isRead = true;
     }
 
     @Override
