@@ -21,12 +21,15 @@ public class CommentResDTO {
             String content,
             String writerName,   // optional
             LocalDateTime createdAt,
-            LocalDateTime updatedAt
+            LocalDateTime updatedAt,
+            List<CommentPreviewDTO> children
     ) {}
 
     @Builder
     public record CommentPreviewListDTO(
-            List<CommentPreviewDTO> commentPreviewListDTO
+            List<CommentPreviewDTO> commentPreviewListDTO,
+            boolean hasNext,
+            Long nextCursor
     ){}
 
     @Builder
