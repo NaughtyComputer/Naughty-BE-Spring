@@ -48,6 +48,10 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 
+	// api 호출 속도를 제어하기 위한 설정
+	implementation 'com.google.guava:guava:32.1.2-jre'
+
+
 }
 
 tasks.named('test') {

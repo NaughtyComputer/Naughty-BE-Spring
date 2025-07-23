@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,53 +23,42 @@ import java.util.List;
 public class KrxService {
 
     private final StockCodeRepository stockCodeRepository;
-    private final KrxInquireService krxInquireService;
-    private final KrxFinancialService krxFinancialService;
     private final KrxStockInfoRepository krxStockInfoRepository;
-    private final StockInfoService stockInfoService;
-    private final FilterStrategy filterStrategy;
+    private final AsyncKrxStockFetcher asyncKrxStockFetcher;
+
     public void saveKrxStocksInfo() {
+        log.info("한국 주식 정보 저장/업데이트 시작");
+        long start = System.currentTimeMillis();
+
+
+        // 기존 데이터 삭제
+        krxStockInfoRepository.deleteAllInBatch();
 
         List<StockCode> stockCodeList = stockCodeRepository.findAll();
 
-        krxStockInfoRepository.deleteAllInBatch();
+        // 비동기 API 호출
+        List<CompletableFuture<Optional<KrxStockInfo>>> completableFutures = stockCodeList.stream()
+                .map(stockCode -> asyncKrxStockFetcher.fetchStock(stockCode.getCode()))
+                .toList();
 
-        for (StockCode stockCode : stockCodeList) {
-            try {
-
-                Thread.sleep(100);
-
-                // 주식 코드를 이용해 현재가, PER, PBR, 업종 한글 종목명 조회
-                KrxDto.InquireDto currentPerPbrOutputDto = krxInquireService.getCurInquireInfo(stockCode.getCode());
-                // 주식 코드를 이용해 EPS 값 조회
-                KrxDto.FinancialDto currentFinanceOutputDto = krxFinancialService.getCurFinancialInfo(stockCode.getCode());
-                StockInfoDto.InfoDto currentKrxStockInfoDto = stockInfoService.getStockInfo(stockCode.getCode(), "300");
+        log.info("{}개의 한국 주식 정보 요청 시작", stockCodeList.size());
 
 
-                if (filterStrategy.shouldSkipKrx(currentPerPbrOutputDto, currentFinanceOutputDto)) {
-                    log.info("PER or PBR or EPS is zero: {}", stockCode.getCode());
-                    continue;
-                }
+        CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture[0])).join(); // join은 예외를 던지지 않는다
+        log.info("모든 한국 주식 정보 요청 완료");
 
-                KrxDto.KrxStockInfoDto stockInfoDto = new KrxDto.KrxStockInfoDto();
+        List<KrxStockInfo> stockInfoList = completableFutures.stream()
+                .map(CompletableFuture::join) // CompletableFuture에서 결과를 가져온다 -> Optional<KrxStockInfo>
+                .filter(Optional::isPresent) // 비어있지 않은 경우만
+                .map(Optional::get).toList();// Optional에서 KrxStockInfo 가져옴
 
-                KrxStockInfo stockInfo = stockInfoDto.toEntity(
-                        currentPerPbrOutputDto,
-                        currentFinanceOutputDto,
-                        currentKrxStockInfoDto
-                );
-
-                krxStockInfoRepository.save(stockInfo);
-
-                log.info("Saved stocks is : {}", stockCode.getCode());
-
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt(); // 현재 스레드 인터럽트 상태 복구
-                log.info("Thread Interrupted : {}", e.getMessage());
-                break;
-            } catch (Exception e) {
-                log.info("Error stock code is {} : {} and pass!", stockCode.getCode(), e.getMessage());
-            }
+        if(!stockInfoList.isEmpty()) {
+            log.info("{} 개의 한국 주식 정보를 DB에 저장 시작", stockInfoList.size());
+            krxStockInfoRepository.saveAll(stockInfoList);
         }
+
+        long end = System.currentTimeMillis();
+        log.info("한국 주식 정보 저장/업데이트 완료, 소요 시간: {} ms", (end - start));
+
     }
 }
