@@ -28,7 +28,7 @@ public class AsyncKrxStockFetcher {
 //    private final RateLimiter rateLimiter = RateLimiter.create(12.0);
 //
     @SuppressWarnings("UnstableApiUsage")
-    private final RateLimiter rateLimiter = RateLimiter.create(12.0, 1,TimeUnit.SECONDS);
+    private final RateLimiter rateLimiter = RateLimiter.create(15.0, 1,TimeUnit.SECONDS);
 
     /**
      * 3개의 API호출과 결과를 비동기 메소드로 묶는다.
