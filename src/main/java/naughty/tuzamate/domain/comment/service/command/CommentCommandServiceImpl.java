@@ -8,6 +8,8 @@ import naughty.tuzamate.domain.comment.dto.CommentResDTO;
 import naughty.tuzamate.domain.comment.entity.Comment;
 import naughty.tuzamate.domain.comment.repository.CommentRepository;
 import naughty.tuzamate.domain.comment.service.FCMService;
+import naughty.tuzamate.domain.notification.entity.Notification;
+import naughty.tuzamate.domain.notification.service.NotificationService;
 import naughty.tuzamate.domain.post.entity.Post;
 import naughty.tuzamate.domain.post.repository.PostRepository;
 import naughty.tuzamate.domain.user.entity.User;

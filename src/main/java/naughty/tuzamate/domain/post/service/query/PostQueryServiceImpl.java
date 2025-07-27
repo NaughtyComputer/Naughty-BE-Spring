@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
-@Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class PostQueryServiceImpl implements PostQueryService {
 
@@ -27,10 +26,15 @@ public class PostQueryServiceImpl implements PostQueryService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
 
+        if (!post.isRead()) {
+            post.setIsRead();
+        }
+
         return PostConverter.toPostPreviewDTO(post);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public PostResDTO.PostPreviewListDTO getPostList(BoardType boardType, Long cursor, int size) {
         PageRequest pr = PageRequest.of(0, size);
         Slice<Post> slice = postRepository.findByBoardTypeAndCursor(boardType, cursor, pr);
