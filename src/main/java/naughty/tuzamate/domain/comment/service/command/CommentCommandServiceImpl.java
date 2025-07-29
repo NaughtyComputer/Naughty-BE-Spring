@@ -56,7 +56,7 @@ public class CommentCommandServiceImpl implements CommentCommandService {
         User parentWriter = parent != null ? parent.getUser() : null;
 
         String content = comment.getContent();
-        String preview = content.length() >= 15 ? content.substring(0, 15) + "..." : content;
+        String preview = (content != null && content.length() >= 15) ? content.substring(0, 15) + "..." : (content != null ? content : "");
         String title = commentWriter.getNickname() + "님이 댓글을 남겼습니다.";
 
         // 게시글 작성자가 아닌 사용자가 댓글을 단 경우
