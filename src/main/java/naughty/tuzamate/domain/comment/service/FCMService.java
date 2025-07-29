@@ -15,6 +15,10 @@ public class FCMService {
     private final FirebaseMessaging firebaseMessaging;
 
     public void sendNotification(String title, String body, String fcmToken) {
+        if (title == null || body == null || fcmToken == null || fcmToken.trim().isEmpty()) {
+        log.warn("Invalid notification parameters - title: {}, body: {}, fcmToken: {}", title, body, fcmToken);
+        return;
+    }
         log.info("Attempting to send Notification (title: {}, body: {}, fcmToken: {})", title, body, fcmToken);
         send(createMessage(title, body, fcmToken));
     }
