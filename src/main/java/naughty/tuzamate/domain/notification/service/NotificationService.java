@@ -10,6 +10,7 @@ import naughty.tuzamate.global.error.exception.CustomException;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -19,6 +20,7 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
 
+    @Transactional
     public void saveNotification(Notification notification) {
         notificationRepository.save(notification);
     }
@@ -62,6 +64,7 @@ public class NotificationService {
     }
 
     // 단일 알림 조회(아직 읽지 않은 알림을 읽는 경우)
+    @Transactional
     public NotificationResDTO.toNotificationResDTO updateIsRead(Long notificationId, Long userId) {
         Notification notification = notificationRepository.findByIdAndReceiverId(notificationId, userId)
                 .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
@@ -71,6 +74,7 @@ public class NotificationService {
         return NotificationConverter.toNotificationDTO(notification);
     }
 
+    @Transactional
     public void deleteNotification(Long notificationId, Long userId) {
         Notification notification = notificationRepository.findByIdAndReceiverId(notificationId, userId)
                 .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
