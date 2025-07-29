@@ -2,6 +2,7 @@ package naughty.tuzamate.domain.notification.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,12 +20,15 @@ public class Notification extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
     private String title;
 
+    @NotBlank
     private String content;
 
     private boolean isRead;
 
+    @Column(name = "target_id")
     private Long targetId; // 관련 postId
 
     @ManyToOne(fetch = FetchType.LAZY)
