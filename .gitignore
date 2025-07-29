@@ -40,3 +40,4 @@ out/
 *.yml
 
 /src/main/generated/
+src/main/resources/firebase/*.json

@@ -9,6 +9,8 @@ import naughty.tuzamate.domain.user.error.exception.UserCustomException;
 import naughty.tuzamate.domain.user.dto.UserRequestDTO;
 import naughty.tuzamate.domain.user.dto.UserResponseDTO;
 import naughty.tuzamate.domain.user.repository.UserRepository;
+import naughty.tuzamate.global.error.GeneralErrorCode;
+import naughty.tuzamate.global.error.exception.CustomException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -71,5 +73,13 @@ public class UserServiceImpl implements UserService{
                 .accessToken(jwtProvider.createAccessToken(newUser))
                 .refreshToken(jwtProvider.createRefreshToken(newUser))
                 .build();
+    }
+
+    @Override
+    public void updateFcmToken(Long userId, String token) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
+
+        user.updateFcmToken(token);
     }
 }
