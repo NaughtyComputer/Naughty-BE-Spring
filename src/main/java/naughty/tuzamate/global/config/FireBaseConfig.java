@@ -21,18 +21,16 @@ public class FireBaseConfig {
 
     @Bean
     public FirebaseApp firebaseApp() {
-        try {
+        try (FileInputStream serviceAccount = new FileInputStream(SERVICE_ACCOUNT_PATH)) {
             FirebaseOptions options = FirebaseOptions.builder()
-                    .setCredentials(
-                            GoogleCredentials.fromStream(new ClassPathResource(SERVICE_ACCOUNT_PATH).getInputStream())
-                    )
+                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .build();
 
             log.info("Successfully initialized firebase app");
             return FirebaseApp.initializeApp(options);
 
         } catch (IOException exception) {
-            log.error("Fail to initialize firebase app{}", exception.getMessage());
+            log.error("Fail to initialize firebase app: {}", exception.getMessage(), exception);
             return null;
         }
     }
