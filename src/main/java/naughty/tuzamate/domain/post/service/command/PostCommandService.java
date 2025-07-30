@@ -9,8 +9,8 @@ import naughty.tuzamate.domain.post.enums.BoardType;
 public interface PostCommandService {
 
     PostResDTO.CreatePostResponseDTO createPost(BoardType boardType, PostReqDTO.CreatePostRequestDTO reqDTO, PrincipalDetails principalDetails);
-    PostResDTO.UpdatePostResponseDTO updatePost(PostReqDTO.UpdatePostRequestDTO reqDTO, Long postId);
-    PostResDTO.DeletePostResponseDTO deletePost(Long postId);
+    PostResDTO.UpdatePostResponseDTO updatePost(PostReqDTO.UpdatePostRequestDTO reqDTO, Long postId, PrincipalDetails principalDetails);
+    PostResDTO.DeletePostResponseDTO deletePost(Long postId, PrincipalDetails principalDetails);
     String postLike(Long postId, PrincipalDetails principalDetails);
     String deleteLike(Long postId, PrincipalDetails principalDetails);
     String postScrap(Long postId, PrincipalDetails principalDetails);
