@@ -9,7 +9,7 @@ public interface CommentCommandService {
             CommentReqDTO.CreateCommentRequestDTO reqDTO, Long postId, PrincipalDetails principalDetails);
 
     CommentResDTO.UpdateCommentResponseDTO updateComment(
-            CommentReqDTO.UpdateCommentRequestDTO reqDTO, Long commentId);
+            CommentReqDTO.UpdateCommentRequestDTO reqDTO, Long commentId, PrincipalDetails principalDetails);
 
-    CommentResDTO.DeleteCommentResponseDTO deleteComment(Long commentId);
+    CommentResDTO.DeleteCommentResponseDTO deleteComment(Long commentId, PrincipalDetails principalDetails);
 }
