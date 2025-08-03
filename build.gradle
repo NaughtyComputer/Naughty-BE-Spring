@@ -54,7 +54,7 @@ dependencies {
 
 
 	implementation 'com.google.firebase:firebase-admin:9.5.0'
-
+}
 
 
 tasks.named('test') {
