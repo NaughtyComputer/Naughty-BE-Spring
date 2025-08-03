@@ -1,14 +1,19 @@
 package naughty.tuzamate.domain.user.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.Value;
 import naughty.tuzamate.auth.jwt.JwtProvider;
+import naughty.tuzamate.auth.principal.PrincipalDetails;
 import naughty.tuzamate.auth.service.RefreshTokenService;
+import naughty.tuzamate.domain.user.dto.FcmRequestDTO;
 import naughty.tuzamate.global.apiPayload.CustomResponse;
 import naughty.tuzamate.domain.user.dto.UserRequestDTO;
 import naughty.tuzamate.domain.user.dto.UserResponseDTO;
 import naughty.tuzamate.domain.user.service.UserService;
+import naughty.tuzamate.global.success.GeneralSuccessCode;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,5 +47,15 @@ public class UserController {
 
         UserResponseDTO.UserTokenDTO signUpResult = userService.signUp(signUpDTO);
         return CustomResponse.onSuccess(signUpResult);
+    }
+
+    @PostMapping("/users/fcm-token")
+    @Operation(summary = "fcm 토큰 발급받아 저장하는 api",
+            description = "프론트에서 로그인 및 회원가입시 FCM 토큰을 발행하여 이 api로 토큰을 전송하면 DB에 저장 및 업데이트")
+    public CustomResponse<?> saveFcmToken(@AuthenticationPrincipal PrincipalDetails principal,
+                                          @RequestBody FcmRequestDTO token) {
+        userService.updateFcmToken(principal.getUser().getId(), token.getToken());
+
+        return CustomResponse.onSuccess(GeneralSuccessCode.OK);
     }
 }

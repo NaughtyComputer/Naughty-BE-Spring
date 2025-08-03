@@ -6,6 +6,7 @@ import naughty.tuzamate.domain.comment.entity.Comment;
 import naughty.tuzamate.domain.post.enums.BoardType;
 import naughty.tuzamate.domain.community.CommunityItem;
 import naughty.tuzamate.domain.postLike.entity.PostLike;
+import naughty.tuzamate.domain.postScrap.entity.PostScrap;
 import naughty.tuzamate.global.BaseTimeEntity;
 import naughty.tuzamate.domain.user.entity.User;
 
@@ -38,8 +39,18 @@ public class Post extends BaseTimeEntity implements CommunityItem {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    // is_read의 값은 false로 초기화
+    @Column(name = "is_read")
+    private boolean isRead = false;
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostLike> postLikes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PostScrap> postScraps = new ArrayList<>();
 
     public void updateTitle(String title) {
         this.title = title;
@@ -60,6 +71,10 @@ public class Post extends BaseTimeEntity implements CommunityItem {
     public void addComment(Comment comment) {
         comments.add(comment);
         comment.setPost(this);
+    }
+
+    public void setIsRead() {
+        this.isRead = true;
     }
 
     @Override

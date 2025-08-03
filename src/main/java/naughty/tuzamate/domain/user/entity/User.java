@@ -63,7 +63,8 @@ public class User extends BaseTimeEntity {
 
     private Long credit; // 크레딧
 
-
+    @Column(name = "fcm_token") // 각 사용자마다 fcm 토큰을 발급(로그인을 시도할 때 마다 토큰 갱신)
+    private String fcmToken;
     /**
      * 회원의 마지막 로그아웃 이후 발급되는 토큰을 판별하기 위한 사용
      * 처음엔 0, 이후 로그아웃 시 + 1
@@ -83,4 +84,7 @@ public class User extends BaseTimeEntity {
         this.experience = experience;
     }
 
+    public void updateFcmToken(String fcmToken) {
+        this.fcmToken = fcmToken;
+    }
 }
