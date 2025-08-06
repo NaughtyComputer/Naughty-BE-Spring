@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import naughty.tuzamate.auth.annotation.UserIdInfo;
 import naughty.tuzamate.domain.profile.converter.ProfileConverter;
+import naughty.tuzamate.domain.profile.dto.request.DeleteUserRequestDto;
 import naughty.tuzamate.domain.profile.dto.response.ProfileResponseDTO;
 import naughty.tuzamate.domain.profile.service.command.ProfileCommandService;
 import naughty.tuzamate.domain.profile.service.query.ProfileQueryService;
@@ -94,5 +95,13 @@ public class ProfileController {
         ProfileResponseDTO.profileCommunityListResponse postList = profileQueryService.getPostList(userId, cursor, offset);
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, postList);
+    }
+
+    @DeleteMapping
+    @Operation(summary = "프로필 삭제", description = "사용자의 프로필을 삭제한다.")
+    public CustomResponse<?> deleteProfile(@UserInfo User user, @Valid @RequestBody DeleteUserRequestDto dto) {
+
+        profileCommandService.deleteProfile(user, dto);
+        return CustomResponse.onSuccess(GeneralSuccessCode.DELETED, dto);
     }
 }
