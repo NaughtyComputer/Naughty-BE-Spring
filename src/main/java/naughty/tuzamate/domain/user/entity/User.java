@@ -72,6 +72,7 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private int tokenVersion = 0;
 
+    @Column(nullable = false)
     private boolean isDeleted; // 회원 탈퇴 여부
 
     public void increaseTokenVersion() {
