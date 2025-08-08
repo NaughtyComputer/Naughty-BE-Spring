@@ -72,6 +72,9 @@ public class User extends BaseTimeEntity {
     @Column(nullable = false)
     private int tokenVersion = 0;
 
+    @Column(nullable = false)
+    private boolean isDeleted; // 회원 탈퇴 여부
+
     public void increaseTokenVersion() {
         this.tokenVersion++;
     }
@@ -86,5 +89,11 @@ public class User extends BaseTimeEntity {
 
     public void updateFcmToken(String fcmToken) {
         this.fcmToken = fcmToken;
+    }
+
+    public void withdraw() {
+        this.isDeleted = true;
+        this.nickname = null;
+        this.email = "deleted_" + this.id + "@tuzamate"; // 이메일을 변경하여 탈퇴 회원임을 표시
     }
 }

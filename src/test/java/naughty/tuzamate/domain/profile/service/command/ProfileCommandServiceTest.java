@@ -1,9 +1,11 @@
 package naughty.tuzamate.domain.profile.service.command;
 
+import naughty.tuzamate.domain.profile.dto.request.DeleteUserRequestDto;
 import naughty.tuzamate.domain.profile.dto.response.ProfileResponseDTO;
 import naughty.tuzamate.domain.user.dto.UserInitProfileRequestDTO;
 import naughty.tuzamate.domain.user.entity.User;
 import naughty.tuzamate.domain.user.repository.UserRepository;
+import naughty.tuzamate.global.error.exception.CustomException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,5 +42,37 @@ class ProfileCommandServiceTest {
         // then
         Assertions.assertThat(response.nickname()).isEqualTo(user.getNickname());
         Assertions.assertThat(user.getExperience()).isEqualTo(user.getExperience());
+    }
+
+    @Test
+    void deleteProfile() {
+
+        // given
+        User user = User.builder().id(1L).nickname("nickname1").email("email1").build();
+        DeleteUserRequestDto dto = new DeleteUserRequestDto("nickname1");
+
+        String prevEmail = user.getEmail();
+
+        // when
+        profileCommandService.deleteProfile(user, dto);
+
+        // then
+        Assertions.assertThat(user.getNickname()).isNull();
+        Assertions.assertThat(user.isDeleted()).isTrue();
+        Assertions.assertThat(userRepository.existsByNickname(dto.nickname())).isFalse();
+        Assertions.assertThat(user.getEmail()).isNotEqualTo(prevEmail);
+
+    }
+
+    @Test
+    void deleteProfileWhenNicknameMismatch() {
+
+        // given
+        User user = User.builder().id(1L).nickname("nickname1").email("email1").build();
+        DeleteUserRequestDto dto = new DeleteUserRequestDto("nickname2");
+
+        // then
+        assertThrows(CustomException.class, () -> profileCommandService.deleteProfile(user, dto));
+
     }
 }
