@@ -59,16 +59,21 @@ public class PostController {
     @Operation(summary = "게시글 수정", description = "게시글을 수정합니다.")
     public CustomResponse<PostResDTO.UpdatePostResponseDTO> updatePost(
             @PathVariable Long postId,
-            @RequestBody PostReqDTO.UpdatePostRequestDTO reqDTO) {
-        PostResDTO.UpdatePostResponseDTO resDTO = postCommandService.updatePost(reqDTO, postId);
+            @RequestBody PostReqDTO.UpdatePostRequestDTO reqDTO,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    ) {
+        PostResDTO.UpdatePostResponseDTO resDTO = postCommandService.updatePost(reqDTO, postId, principalDetails);
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, resDTO);
     }
 
     @DeleteMapping("/boards/{boardType}/posts/{postId}")
     @Operation(summary = "게시글 삭제", description = "게시글을 삭제합니다.")
-    public CustomResponse<PostResDTO.DeletePostResponseDTO> deletePost(@PathVariable Long postId) {
-        PostResDTO.DeletePostResponseDTO resDTO = postCommandService.deletePost(postId);
+    public CustomResponse<PostResDTO.DeletePostResponseDTO> deletePost(
+            @PathVariable Long postId,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    ) {
+        PostResDTO.DeletePostResponseDTO resDTO = postCommandService.deletePost(postId, principalDetails);
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, resDTO);
     }

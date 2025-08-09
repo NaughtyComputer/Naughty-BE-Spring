@@ -65,8 +65,10 @@ public class CommentController {
             description = "현재 존재하는 댓글 및 대댓글을 수정하는 기능을 수행합니다.")
     public CustomResponse<CommentResDTO.UpdateCommentResponseDTO> updateComment(
             @PathVariable Long commentId,
-            @RequestBody CommentReqDTO.UpdateCommentRequestDTO reqDTO) {
-        CommentResDTO.UpdateCommentResponseDTO resDTO = commentCommandService.updateComment(reqDTO, commentId);
+            @RequestBody CommentReqDTO.UpdateCommentRequestDTO reqDTO,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    ) {
+        CommentResDTO.UpdateCommentResponseDTO resDTO = commentCommandService.updateComment(reqDTO, commentId, principalDetails);
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, resDTO);
     }
@@ -74,8 +76,11 @@ public class CommentController {
     @DeleteMapping("/{postId}/comments/{commentId}")
     @Operation(summary = "댓글 및 대댓글 삭제",
             description = "현재 존재하는 댓글 및 대댓글을 삭제하는 기능을 수행합니다.")
-    public CustomResponse<CommentResDTO.DeleteCommentResponseDTO> deleteComment(@PathVariable Long commentId) {
-        CommentResDTO.DeleteCommentResponseDTO resDTO = commentCommandService.deleteComment(commentId);
+    public CustomResponse<CommentResDTO.DeleteCommentResponseDTO> deleteComment(
+            @PathVariable Long commentId,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    ) {
+        CommentResDTO.DeleteCommentResponseDTO resDTO = commentCommandService.deleteComment(commentId, principalDetails);
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, resDTO);
     }

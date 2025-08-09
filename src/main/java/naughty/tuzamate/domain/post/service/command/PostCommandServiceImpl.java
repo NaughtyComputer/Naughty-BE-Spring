@@ -41,10 +41,16 @@ public class PostCommandServiceImpl implements PostCommandService {
     }
 
     @Override
-    public PostResDTO.UpdatePostResponseDTO updatePost(PostReqDTO.UpdatePostRequestDTO reqDTO, Long postId) {
+    public PostResDTO.UpdatePostResponseDTO updatePost(
+            PostReqDTO.UpdatePostRequestDTO reqDTO, Long postId, PrincipalDetails principalDetails
+    ) {
         // reqDTO -> Post Entity, Post Entity -> resDTO
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
+
+        if (!post.getUser().getId().equals(principalDetails.getUser().getId())) {
+            throw new CustomException(GeneralErrorCode.FORBIDDEN_403); // 권한 없음
+        }
 
         if (reqDTO.title() != null) {
             post.updateTitle(reqDTO.title());
@@ -57,9 +63,13 @@ public class PostCommandServiceImpl implements PostCommandService {
     }
 
     @Override
-    public PostResDTO.DeletePostResponseDTO deletePost(Long postId) {
+    public PostResDTO.DeletePostResponseDTO deletePost(Long postId, PrincipalDetails principalDetails) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
+
+        if (!post.getUser().getId().equals(principalDetails.getUser().getId())) {
+            throw new CustomException(GeneralErrorCode.FORBIDDEN_403); // 권한 없음
+        }
 
         postRepository.delete(post);
 

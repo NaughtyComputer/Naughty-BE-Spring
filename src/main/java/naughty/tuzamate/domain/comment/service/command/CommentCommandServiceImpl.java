@@ -93,9 +93,17 @@ public class CommentCommandServiceImpl implements CommentCommandService {
     }
 
     @Override
-    public CommentResDTO.UpdateCommentResponseDTO updateComment(CommentReqDTO.UpdateCommentRequestDTO reqDTO, Long commentId) {
+    public CommentResDTO.UpdateCommentResponseDTO updateComment(
+            CommentReqDTO.UpdateCommentRequestDTO reqDTO,
+            Long commentId,
+            PrincipalDetails principalDetails
+    ) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
+
+        if (!comment.getUser().getId().equals(principalDetails.getUser().getId())) {
+            throw new CustomException(GeneralErrorCode.FORBIDDEN_403); // 권한 없음
+        }
 
         comment.updateContent(reqDTO.content());
 
@@ -103,8 +111,15 @@ public class CommentCommandServiceImpl implements CommentCommandService {
     }
 
     @Override
-    public CommentResDTO.DeleteCommentResponseDTO deleteComment(Long commentId) {
-        commentRepository.deleteById(commentId);
+    public CommentResDTO.DeleteCommentResponseDTO deleteComment(Long commentId, PrincipalDetails principalDetails) {
+        Comment comment = commentRepository.findById(commentId)
+                .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
+
+        if (!comment.getUser().getId().equals(principalDetails.getUser().getId())) {
+            throw new CustomException(GeneralErrorCode.FORBIDDEN_403);
+        }
+
+        commentRepository.delete(comment);
 
         return CommentConverter.toDeleteCommentResponseDTO(commentId);
     }
