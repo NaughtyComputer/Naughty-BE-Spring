@@ -29,6 +29,7 @@ public class StockController {
     private final KrxInquireService krxInquireService;
     private final KrxFinancialService krxFinancialService;
     private final StockInfoService stockInfoService;
+    private final AsyncNasdaqStockFetcher asyncNasdaqStockFetcher;
 
     @PostMapping("/post-stock-codes")
     @Operation(summary = "주식 코드 저장", description = "코스피, 코스닥, 나스닥 주식 코드를 저장합니다.")
@@ -48,7 +49,11 @@ public class StockController {
             description = "나스닥 주식 한 개의 기본 정보를 가져옵니다. 주식 코드를 입력해야 합니다.")
     public NasdaqDto.NasdaqInfoDto getNasdaqStockInfo(@PathVariable("nasdaqStockCode") String nasdaqStockCode) {
 
-        return nasdaqService.getCurrentNasdaqInfo(nasdaqStockCode);
+        try {
+            return asyncNasdaqStockFetcher.getCurrentNasdaqInfo(nasdaqStockCode);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @PostMapping("/nasdaq/all")

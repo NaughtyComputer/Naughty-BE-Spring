@@ -15,130 +15,60 @@ import naughty.tuzamate.domain.stock.strategy.FilterStrategy;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class NasdaqService {
 
-    private final RestTemplate restTemplate;
-    private final ObjectMapper objectMapper;
     private final NasdaqCodeRepository nasdaqCodeRepository;
     private final NasdaqStockInfoRepository nasdaqStockInfoRepository;
-    private final HantuApiTokenService hantuApiTokenService;
-    private final StockInfoService stockInfoService;
-    private final FilterStrategy filterStrategy;
+    private final AsyncNasdaqStockFetcher asyncNasdaqStockFetcher;
 
-    @Value("${tuza.api.APP_KEY}")
-    private String appKey;
-
-    @Value("${tuza.api.APP_SECRET_KEY}")
-    private String appSecret;
-
-    private String accessToken;
-
-    private HttpHeaders createHeaders() {
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        accessToken = hantuApiTokenService.getCurrentAccessToken();
-
-        httpHeaders.setBearerAuth(accessToken);
-        httpHeaders.set("appkey", appKey);
-        httpHeaders.set("appsecret", appSecret);
-        httpHeaders.set("tr_id", "HHDFS76200200");
-        httpHeaders.set("custtype", "P");
-
-        return httpHeaders;
-    }
-
-    private NasdaqDto.NasdaqInfoDto parsingCurrentNasdaqInfo(String response, String stockCode) {
-        NasdaqDto.NasdaqInfoDto data = new NasdaqDto.NasdaqInfoDto();
-
-        try {
-            JsonNode rootNode = objectMapper.readTree(response);
-            JsonNode node = rootNode.path("output");
-
-            if (node != null) {
-                NasdaqDto.NasdaqInfoDto outputDto = new NasdaqDto.NasdaqInfoDto();
-
-                outputDto.setCode(stockCode);
-                outputDto.setPerx(node.path("perx").asText());
-                outputDto.setPbrx(node.path("pbrx").asText());
-                outputDto.setEpsx(node.path("epsx").asText());
-                outputDto.setE_icod(node.path("e_icod").asText());
-                outputDto.setLast(node.path("last").asText());
-
-
-                data = outputDto;
-            }
-            return data;
-        } catch (Exception e) {
-            log.error("error is : {}", e.getMessage());
-            throw new RuntimeException();
-        }
-    }
-
-    public NasdaqDto.NasdaqInfoDto getCurrentNasdaqInfo(String stockCode) {
-
-
-        HttpHeaders header = createHeaders();
-
-        String url = "https://openapi.koreainvestment.com:9443/uapi/overseas-price/v1/quotations/price-detail";
-
-        HttpEntity<?> httpEntity = new HttpEntity<>(header);
-
-        UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-                .queryParam("AUTH", "")
-                .queryParam("EXCD", "NAS")
-                .queryParam("SYMB", stockCode);
-
-        ResponseEntity<String> response = restTemplate.exchange(
-                builder.toUriString(),
-                HttpMethod.GET,
-                httpEntity,
-                String.class
-        );
-
-        return parsingCurrentNasdaqInfo(response.getBody(), stockCode);
-
-    }
-
+    @Transactional
     public void saveNasdaqStocksInfo() {
-        List<NasdaqStockCode> stockCodeList = nasdaqCodeRepository.findAll();
+        log.info("미국 주식 정보 저장/업데이트 시작");
+        long start = System.currentTimeMillis();
 
+        // 기존 데이터 삭제
         nasdaqStockInfoRepository.deleteAllInBatch();
 
-        for (NasdaqStockCode stockCode : stockCodeList) {
-            try {
+        List<NasdaqStockCode> stockCodeList = nasdaqCodeRepository.findAll();
 
-                Thread.sleep(100);
+        // 비동기 API 호출
+        List<CompletableFuture<Optional<NasdaqStockInfo>>> completableFutures = stockCodeList.stream()
+                .map(stockCode -> asyncNasdaqStockFetcher.fetchStock(stockCode.getCode()))
+                .toList();
 
-                NasdaqDto.NasdaqInfoDto currentNasdaqInfo = getCurrentNasdaqInfo(stockCode.getCode());
-                StockInfoDto.InfoDto currentStockInfo = stockInfoService.getStockInfo(stockCode.getCode(), "512");
+        log.info("{}개의 나스닥 주식 정보 요청 시작", stockCodeList.size());
 
-                if (filterStrategy.shouldSkipNasdaq(currentNasdaqInfo)) {
-                    log.info("PER or PBR or EPS is zero: {}", stockCode.getCode());
-                    continue; // 필터 전략에 의해 스킵된 경우 다음 주식 코드로 넘어감
-                }
+        // 모든 CompletableFuture가 완료될 때까지 기다린다
+        CompletableFuture.allOf(completableFutures.toArray(new CompletableFuture[0])).join();
+        log.info("모든 나스닥 주식 정보 요청 완료");
 
-                NasdaqStockInfo entity = currentNasdaqInfo.toEntity(currentNasdaqInfo, currentStockInfo);
+        // 결과를 Optional<NasdaqStockInfo>로 변환하여 리스트로 수집한다
+        List<NasdaqStockInfo> stockInfoList = completableFutures.stream()
+                .map(CompletableFuture::join)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList();
 
-                nasdaqStockInfoRepository.save(entity);
-
-                log.info("Saved stocks is : {}", stockCode.getCode());
-
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt(); // 현재 스레드 인터럽트 상태 복구
-                log.info("Thread Interrupted : {}", e.getMessage());
-                break;
-            } catch (Exception e) {
-                log.info("Error stock code is {} : {} and pass!", stockCode.getCode(), e.getMessage());
-            }
-
+        // 데이터 DB에 일괄 저장
+        if (!stockInfoList.isEmpty()) {
+            log.info("{} 개의 나스닥 주식 정보를 DB에 저장 시작", stockInfoList.size());
+            nasdaqStockInfoRepository.saveAll(stockInfoList);
         }
+
+        long end = System.currentTimeMillis();
+        log.info("나스닥 주식 정보 저장/업데이트 완료, 소요 시간: {} ms", (end - start));
+
     }
 }
