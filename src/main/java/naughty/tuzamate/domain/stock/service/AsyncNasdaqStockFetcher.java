@@ -47,7 +47,6 @@ public class AsyncNasdaqStockFetcher {
             rateLimiter.acquire(3);
 
 
-            // 한투 API 호출에 필요한 헤더 생성
             HttpHeaders header = createHeaders();
             String url = "https://openapi.koreainvestment.com:9443/uapi/overseas-price/v1/quotations/price-detail";
             HttpEntity<?> httpEntity = new HttpEntity<>(header);
@@ -57,7 +56,6 @@ public class AsyncNasdaqStockFetcher {
                     .queryParam("EXCD", "NAS")
                     .queryParam("SYMB", stockCode);
 
-            // 한투 API 호출
             ResponseEntity<String> response = restTemplate.exchange(
                     builder.toUriString(),
                     HttpMethod.GET,
@@ -65,16 +63,14 @@ public class AsyncNasdaqStockFetcher {
                     String.class
             );
 
-            // 응답 파싱
             NasdaqDto.NasdaqInfoDto currentNasdaqInfo = parsingCurrentNasdaqInfo(response.getBody(), stockCode);
 
-            // 필터링 전략 적용
+            // 한국 주식과 마찬가지로 필터링
             if (filterStrategy.shouldSkipNasdaq(currentNasdaqInfo)) {
                 log.info("PER or PBR or EPS is zero: {}", stockCode);
                 return CompletableFuture.completedFuture(Optional.empty());
             }
 
-            // 추가 주식 정보 조회
             StockInfoDto.InfoDto currentStockInfo = stockInfoService.getStockInfo(stockCode, "512");
 
             NasdaqStockInfo entity = currentNasdaqInfo.toEntity(currentNasdaqInfo, currentStockInfo);
@@ -101,25 +97,29 @@ public class AsyncNasdaqStockFetcher {
         return httpHeaders;
     }
 
-    private NasdaqDto.NasdaqInfoDto parsingCurrentNasdaqInfo(String response, String stockCode) throws Exception {
+    private NasdaqDto.NasdaqInfoDto parsingCurrentNasdaqInfo(String response, String stockCode)  {
 
-        JsonNode rootNode = objectMapper.readTree(response);
-        JsonNode node = rootNode.path("output");
+        try {
+            JsonNode rootNode = objectMapper.readTree(response);
+            JsonNode node = rootNode.path("output");
 
-        NasdaqDto.NasdaqInfoDto outputDto = new NasdaqDto.NasdaqInfoDto();
-        outputDto.setCode(stockCode);
-        outputDto.setPerx(node.path("perx").asText());
-        outputDto.setPbrx(node.path("pbrx").asText());
-        outputDto.setEpsx(node.path("epsx").asText());
-        outputDto.setE_icod(node.path("e_icod").asText());
-        outputDto.setLast(node.path("last").asText());
+            NasdaqDto.NasdaqInfoDto outputDto = new NasdaqDto.NasdaqInfoDto();
+            outputDto.setCode(stockCode);
+            outputDto.setPerx(node.path("perx").asText());
+            outputDto.setPbrx(node.path("pbrx").asText());
+            outputDto.setEpsx(node.path("epsx").asText());
+            outputDto.setE_icod(node.path("e_icod").asText());
+            outputDto.setLast(node.path("last").asText());
 
-        return outputDto;
+            return outputDto;
+        } catch (Exception e) {
+            throw new RuntimeException("Error parsing response: " + e.getMessage(), e);
+        }
     }
 
     // 현재 나스닥 주식 정보 조회 메소드
     // 없어도 되지만 컨트롤러의 getNasdaqStockInfo 메소드의 나스닥 단일 코드로 조회하는 테스트 용 메소드이다.
-    public NasdaqDto.NasdaqInfoDto getCurrentNasdaqInfo(String stockCode) throws Exception {
+    public NasdaqDto.NasdaqInfoDto getCurrentNasdaqInfo(String stockCode)  {
 
 
         HttpHeaders header = createHeaders();

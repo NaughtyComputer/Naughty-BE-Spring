@@ -49,11 +49,7 @@ public class StockController {
             description = "나스닥 주식 한 개의 기본 정보를 가져옵니다. 주식 코드를 입력해야 합니다.")
     public NasdaqDto.NasdaqInfoDto getNasdaqStockInfo(@PathVariable("nasdaqStockCode") String nasdaqStockCode) {
 
-        try {
             return asyncNasdaqStockFetcher.getCurrentNasdaqInfo(nasdaqStockCode);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
     }
 
     @PostMapping("/nasdaq/all")
