@@ -9,6 +9,7 @@ import naughty.tuzamate.domain.post.enums.BoardType;
 import naughty.tuzamate.domain.user.entity.User;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
