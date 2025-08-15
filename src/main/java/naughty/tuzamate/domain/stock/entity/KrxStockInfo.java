@@ -1,9 +1,6 @@
 package naughty.tuzamate.domain.stock.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -14,7 +11,13 @@ import lombok.*;
 public class KrxStockInfo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator = "krx_stock_info_seq")
+    @SequenceGenerator(
+            name = "krx_stock_info_seq",
+            sequenceName = "krx_stock_info_seq",
+            allocationSize = 50 // 시퀀스 한 번에 50개 id 확보
+    )
     private Long id;
 
     private String stckShrnIscd; // 주식 단축 종목코드

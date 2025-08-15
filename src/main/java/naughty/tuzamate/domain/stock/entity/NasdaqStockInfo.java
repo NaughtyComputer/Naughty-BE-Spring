@@ -1,9 +1,6 @@
 package naughty.tuzamate.domain.stock.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -14,7 +11,13 @@ import lombok.*;
 public class NasdaqStockInfo {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE,
+            generator = "nasdaq_stock_info_seq")
+    @SequenceGenerator(
+            name = "nasdaq_stock_info_seq",
+            sequenceName = "nasdaq_stock_info_seq",
+            allocationSize = 50
+    )
     private Long id;
 
     private String code;
