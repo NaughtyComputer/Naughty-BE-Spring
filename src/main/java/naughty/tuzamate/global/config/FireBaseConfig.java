@@ -20,14 +20,14 @@ import java.io.InputStream;
 @Configuration
 public class FireBaseConfig {
 
-    // 🚨 수정 포인트 1: String 대신 Resource 타입으로 주입받습니다.
+    // String 대신 Resource 타입으로 주입받음
     @Value("${firebase.service-account.path}")
     private Resource serviceAccountResource;
 
     @Bean
     public FirebaseApp firebaseApp() {
         try {
-            // 🚨 수정 포인트 2: 주입받은 Resource에서 바로 InputStream을 얻습니다.
+            // 주입받은 Resource에서 바로 InputStream을 얻음
             InputStream serviceAccount = serviceAccountResource.getInputStream();
 
             FirebaseOptions options = FirebaseOptions.builder()
