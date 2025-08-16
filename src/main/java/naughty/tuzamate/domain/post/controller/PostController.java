@@ -49,7 +49,7 @@ public class PostController {
     public CustomResponse<PostResDTO.PostPreviewListDTO> getPostList(
             @PathVariable BoardType boardType,
             @RequestParam(required = false) Long cursor,
-            @RequestParam(defaultValue = "10") @Max(30) int size) {
+            @RequestParam(defaultValue = "10") @Max(10) int size) {
         PostResDTO.PostPreviewListDTO resDTO = postQueryService.getPostList(boardType, cursor, size);
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, resDTO);

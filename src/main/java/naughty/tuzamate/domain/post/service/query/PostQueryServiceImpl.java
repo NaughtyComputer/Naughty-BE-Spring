@@ -9,6 +9,7 @@ import naughty.tuzamate.domain.post.repository.PostRepository;
 import naughty.tuzamate.global.error.GeneralErrorCode;
 import naughty.tuzamate.global.error.exception.CustomException;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,20 +37,31 @@ public class PostQueryServiceImpl implements PostQueryService {
     @Override
     @Transactional(readOnly = true)
     public PostResDTO.PostPreviewListDTO getPostList(BoardType boardType, Long cursor, int size) {
-        PageRequest pr = PageRequest.of(0, size);
-        Slice<Post> slice = postRepository.findByBoardTypeAndCursor(boardType, cursor, pr);
+        cursor = normalizeCursor(cursor);
+        size = normalizeSize(size);
 
-        List<PostResDTO.PostPreviewDTO> previews = slice.getContent()
-                .stream()
+        Pageable pageable = PageRequest.of(0, size);
+        Slice<Post> slice = postRepository.findByBoardTypeAndCursor(boardType, cursor, pageable);
+
+        List<PostResDTO.PostPreviewDTO> previews = slice.stream()
                 .map(PostConverter::toPostPreviewDTO)
                 .toList();
 
-        Long nextCursor = slice.hasNext() ? previews.get(previews.size() - 1).id() : null;
+        Long nextCursor = (slice.hasNext() && !previews.isEmpty()) ? previews.get(previews.size() - 1).id() : null;
 
         return PostResDTO.PostPreviewListDTO.builder()
                 .postPreviewDTOList(previews)
                 .nextCursor(nextCursor)
                 .hasNext(slice.hasNext())
                 .build();
+    }
+
+    private Long normalizeCursor(Long cursor) {
+        return (cursor == null || cursor == 0) ? Long.MAX_VALUE : cursor;
+    }
+
+    // 요청 사이즈가 1보다 작으면 기본값 10, 10보다 크면 최대값 10으로 제한
+    private int normalizeSize(int size) {
+        return (size < 1 || size > 10) ? 10 : size;
     }
 }
