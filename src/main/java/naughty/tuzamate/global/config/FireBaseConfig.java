@@ -29,11 +29,11 @@ public class FireBaseConfig {
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .build();
 
-            log.info("✅ Successfully initialized firebase app");
+            log.info(" Successfully initialized firebase app");
             return FirebaseApp.initializeApp(options);
 
         } catch (IOException exception) {
-            log.error("❌ Fail to initialize firebase app: {}", exception.getMessage(), exception);
+            log.error(" Fail to initialize firebase app: {}", exception.getMessage(), exception);
             return null;
         }
     }
