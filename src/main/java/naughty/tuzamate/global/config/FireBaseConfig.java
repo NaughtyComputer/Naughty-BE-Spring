@@ -12,27 +12,40 @@ import org.springframework.core.io.ClassPathResource;
 import java.io.FileInputStream;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 @Slf4j
 @Configuration
 public class FireBaseConfig {
 
     @Value("${firebase.service-account.path}")
-    private String SERVICE_ACCOUNT_PATH;
+    private String serviceAccountPath;
 
     @Bean
     public FirebaseApp firebaseApp() {
-        try (FileInputStream serviceAccount = new FileInputStream(SERVICE_ACCOUNT_PATH)) {
+        try (InputStream serviceAccount = getServiceAccountStream()) {
+
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .build();
 
-            log.info("Successfully initialized firebase app");
+            log.info("✅ Successfully initialized firebase app");
             return FirebaseApp.initializeApp(options);
 
         } catch (IOException exception) {
-            log.error("Fail to initialize firebase app: {}", exception.getMessage(), exception);
+            log.error("❌ Fail to initialize firebase app: {}", exception.getMessage(), exception);
             return null;
+        }
+    }
+
+    private InputStream getServiceAccountStream() throws IOException {
+        // 절대경로면 FileInputStream, 아니면 classpath
+        if (serviceAccountPath.startsWith("/") || serviceAccountPath.contains(":")) {
+            log.info("Using absolute path for Firebase service account: {}", serviceAccountPath);
+            return new FileInputStream(serviceAccountPath);
+        } else {
+            log.info("Using classpath resource for Firebase service account: {}", serviceAccountPath);
+            return new ClassPathResource(serviceAccountPath).getInputStream();
         }
     }
 

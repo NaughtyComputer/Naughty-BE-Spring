@@ -13,6 +13,7 @@ public interface PostLikeRepository extends JpaRepository<PostLike, Long> {
 
     public boolean existsByPostAndUser(Post post, User user);
     public PostLike findByPostAndUser(Post post, User user);
+    public boolean existsByPostIdAndUserId(Long postId, Long userId);
 
     // 커서가 없는 경우 최신순 조회
     @Query("select pl from PostLike pl join fetch pl.post p where pl.user.id = :userId order by pl.id desc")

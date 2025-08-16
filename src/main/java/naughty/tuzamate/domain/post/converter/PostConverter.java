@@ -33,6 +33,23 @@ public class PostConverter {
                 .build();
     }
 
+    // Post Entity -> PostDTO
+    public static PostResDTO.PostDTO toPostDTO(Post post, boolean liked, boolean scraped) {
+        return PostResDTO.PostDTO.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .content(post.getContent())
+                .likeNum(post.getLikeNum())
+                .author(post.getUser().getNickname())
+                .commentNum((long) post.getComments().size()) // 댓글 수
+                .isRead(post.isRead())
+                .liked(liked)
+                .scraped(scraped)
+                .createdAt(post.getCreatedAt())
+                .updatedAt(post.getUpdatedAt())
+                .build();
+    }
+
     // Post Entity -> PostPreviewDTO
     public static PostResDTO.PostPreviewDTO toPostPreviewDTO(Post post) {
         return PostResDTO.PostPreviewDTO.builder()

@@ -15,6 +15,23 @@ public class PostResDTO {
     }
 
     @Builder
+    public record PostDTO(
+            Long id,
+            String title,
+            String content,
+            Long likeNum,
+            // 작성자 닉네임, 댓글 수 필드 추가
+            String author,
+            Long commentNum,
+            boolean isRead,
+            boolean liked,
+            boolean scraped,
+            LocalDateTime createdAt,
+            LocalDateTime updatedAt
+    ){
+    }
+
+    @Builder
     public record PostPreviewDTO(
             Long id,
             String title,
