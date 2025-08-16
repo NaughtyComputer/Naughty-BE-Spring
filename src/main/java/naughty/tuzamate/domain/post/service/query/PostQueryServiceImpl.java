@@ -1,11 +1,16 @@
 package naughty.tuzamate.domain.post.service.query;
 
 import lombok.RequiredArgsConstructor;
+import naughty.tuzamate.auth.principal.PrincipalDetails;
 import naughty.tuzamate.domain.post.converter.PostConverter;
 import naughty.tuzamate.domain.post.dto.PostResDTO;
 import naughty.tuzamate.domain.post.entity.Post;
 import naughty.tuzamate.domain.post.enums.BoardType;
 import naughty.tuzamate.domain.post.repository.PostRepository;
+import naughty.tuzamate.domain.postLike.repository.PostLikeRepository;
+import naughty.tuzamate.domain.postScrap.repository.PostScrapRepository;
+import naughty.tuzamate.domain.user.entity.User;
+import naughty.tuzamate.domain.user.repository.UserRepository;
 import naughty.tuzamate.global.error.GeneralErrorCode;
 import naughty.tuzamate.global.error.exception.CustomException;
 import org.springframework.data.domain.PageRequest;
@@ -14,6 +19,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.security.Principal;
 import java.util.List;
 
 @Service
@@ -21,9 +27,11 @@ import java.util.List;
 public class PostQueryServiceImpl implements PostQueryService {
 
     private final PostRepository postRepository;
+    private final PostLikeRepository postLikeRepository;
+    private final PostScrapRepository postScrapRepository;
 
     @Override
-    public PostResDTO.PostPreviewDTO getPost(Long postId) {
+    public PostResDTO.PostDTO getPost(Long postId, PrincipalDetails principalDetails) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
 
@@ -31,7 +39,10 @@ public class PostQueryServiceImpl implements PostQueryService {
             post.setIsRead();
         }
 
-        return PostConverter.toPostPreviewDTO(post);
+        boolean liked = postLikeRepository.existsByPostIdAndUserId(postId, principalDetails.getId());
+        boolean scraped = postScrapRepository.existsByPostIdAndUserId(postId, principalDetails.getId());
+
+        return PostConverter.toPostDTO(post, liked, scraped);
     }
 
     @Override

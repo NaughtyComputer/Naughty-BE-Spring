@@ -14,6 +14,7 @@ public interface PostScrapRepository extends JpaRepository<PostScrap, Long> {
 
     public boolean existsByPostAndUser(Post post, User user);
     public PostScrap findByPostAndUser(Post post, User user);
+    public boolean existsByPostIdAndUserId(Long postId, Long userId);
 
     // 커서가 없는 경우 최신순 조회
     @Query("select ps from PostScrap ps join fetch ps.post p where ps.user.id = :userId order by ps.id desc")

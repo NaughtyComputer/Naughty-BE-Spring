@@ -20,32 +20,34 @@ import java.io.InputStream;
 @Configuration
 public class FireBaseConfig {
 
-    // String 대신 Resource 타입으로 주입받음
     @Value("${firebase.service-account.path}")
-    private Resource serviceAccountResource;
+    private String serviceAccountPath;
 
     @Bean
     public FirebaseApp firebaseApp() {
-        try {
-            // 주입받은 Resource에서 바로 InputStream을 얻음
-            InputStream serviceAccount = serviceAccountResource.getInputStream();
+        try (InputStream serviceAccount = getServiceAccountStream()) {
 
             FirebaseOptions options = FirebaseOptions.builder()
                     .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                     .build();
 
-            // 앱이 이미 초기화되었는지 확인 (중복 초기화 방지)
-            if (FirebaseApp.getApps().isEmpty()) {
-                log.info("Successfully initialized firebase app");
-                return FirebaseApp.initializeApp(options);
-            } else {
-                return FirebaseApp.getInstance();
-            }
+            log.info(" Successfully initialized firebase app");
+            return FirebaseApp.initializeApp(options);
 
         } catch (IOException exception) {
-            log.error("Fail to initialize firebase app: {}", exception.getMessage(), exception);
-            // 초기화 실패 시 null 대신 예외를 던져서 애플리케이션이 문제를 인지하게 하는 것이 더 좋습니다.
-            throw new RuntimeException("Failed to initialize Firebase app.", exception);
+            log.error(" Fail to initialize firebase app: {}", exception.getMessage(), exception);
+            return null;
+        }
+    }
+
+    private InputStream getServiceAccountStream() throws IOException {
+        // 절대경로면 FileInputStream, 아니면 classpath
+        if (serviceAccountPath.startsWith("/") || serviceAccountPath.contains(":")) {
+            log.info("Using absolute path for Firebase service account: {}", serviceAccountPath);
+            return new FileInputStream(serviceAccountPath);
+        } else {
+            log.info("Using classpath resource for Firebase service account: {}", serviceAccountPath);
+            return new ClassPathResource(serviceAccountPath).getInputStream();
         }
     }
 

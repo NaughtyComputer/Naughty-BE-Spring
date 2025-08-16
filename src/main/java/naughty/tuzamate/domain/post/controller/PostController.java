@@ -38,8 +38,11 @@ public class PostController {
 
     @GetMapping("/boards/{boardType}/posts/{postId}")
     @Operation(summary = "단일 게시글 조회", description = "단일 게시글을 조회합니다.")
-    public CustomResponse<PostResDTO.PostPreviewDTO> getPost(@PathVariable Long postId) {
-        PostResDTO.PostPreviewDTO resDTO = postQueryService.getPost(postId);
+    public CustomResponse<PostResDTO.PostDTO> getPost(
+            @PathVariable Long postId,
+            @AuthenticationPrincipal PrincipalDetails principalDetails
+    ) {
+        PostResDTO.PostDTO resDTO = postQueryService.getPost(postId, principalDetails);
 
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, resDTO);
     }
