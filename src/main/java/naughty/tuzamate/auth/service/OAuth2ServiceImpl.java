@@ -12,10 +12,7 @@ import naughty.tuzamate.domain.user.error.UserErrorCode;
 import naughty.tuzamate.domain.user.error.exception.UserCustomException;
 import naughty.tuzamate.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -24,6 +21,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -85,7 +83,7 @@ public class OAuth2ServiceImpl implements OAuth2Service {
 
     }
 
-    private UserResponseDTO.UserTokenDTO loginAndSignUp(SocialType socialType, String email) {
+    public UserResponseDTO.UserTokenDTO loginAndSignUp(SocialType socialType, String email) {
 
         User user;
         Optional<User> userEmail = userRepository.findByEmail(email);
@@ -111,7 +109,7 @@ public class OAuth2ServiceImpl implements OAuth2Service {
                 .build();
     }
 
-    private KakaoOAuth2DTO.KakaoProfile getProfileFromKakao(String accessToken) {
+    public KakaoOAuth2DTO.KakaoProfile getProfileFromKakao(String accessToken) {
 
         // 액세스 토큰으로 사용자 정보를 가져온다
         RestTemplate restTemplate = new RestTemplate();
