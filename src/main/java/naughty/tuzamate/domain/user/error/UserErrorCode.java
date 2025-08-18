@@ -19,7 +19,8 @@ public enum UserErrorCode implements BaseErrorCode {
     LOGGED_OUT_USER(HttpStatus.UNAUTHORIZED, "USER40101", "로그아웃된 사용자입니다. 다시 로그인 해주세요."),
     INVALID_USER_ID_FORMAT(HttpStatus.BAD_REQUEST, "USER40001", "유효하지 않은 사용자 ID 형식입니다."),
     ALREADY_INIT_PROFILE(HttpStatus.BAD_REQUEST, "USER40002", "이미 프로필이 초기화되어 있습니다."),
-    USER_NICKNAME_ALREADY_EXISTS(HttpStatus.CONFLICT, "USER40902", "이미 존재하는 닉네임입니다."),;
+    USER_NICKNAME_ALREADY_EXISTS(HttpStatus.CONFLICT, "USER40902", "이미 존재하는 닉네임입니다."),
+    INVALID_OAUTH_TOKEN(HttpStatus.UNAUTHORIZED, "USER40103", "유효하지 않은 토큰입니다."),;
 
 
     private final HttpStatus status;
