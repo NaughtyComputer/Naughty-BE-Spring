@@ -1,6 +1,7 @@
 package naughty.tuzamate.domain.comment.service.query;
 
 import lombok.RequiredArgsConstructor;
+import naughty.tuzamate.domain.comment.code.CommentErrorCode;
 import naughty.tuzamate.domain.comment.converter.CommentConverter;
 import naughty.tuzamate.domain.comment.dto.CommentResDTO;
 import naughty.tuzamate.domain.comment.entity.Comment;
@@ -27,7 +28,7 @@ public class CommentQueryServiceImpl implements CommentQueryService {
     @Override
     public CommentResDTO.CommentPreviewDTO getComment(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
+                .orElseThrow(() -> new CustomException(CommentErrorCode.COMMENT_NOT_FOUND));
 
         return CommentConverter.toCommentPreviewDTO(comment, List.of());
     }
