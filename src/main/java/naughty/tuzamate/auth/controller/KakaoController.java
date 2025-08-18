@@ -60,6 +60,12 @@ public class KakaoController {
         String email = profileFromKakao.getKakao_account().getEmail();
         UserResponseDTO.UserTokenDTO userTokenDTO = oAuth2Service.loginAndSignUp(SocialType.KAKAO, email);
 
+        refreshTokenService.saveRefreshToken(
+                userTokenDTO.getUserId(),
+                userTokenDTO.getRefreshToken(),
+                LocalDateTime.ofInstant(Instant.ofEpochMilli(userTokenDTO.getRefreshTokenExpire().getTime()), ZoneId.of("Asia/Seoul")));
+
+
         return CustomResponse.onSuccess(userTokenDTO);
     }
 }
