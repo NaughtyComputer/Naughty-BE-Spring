@@ -10,6 +10,7 @@ import naughty.tuzamate.domain.comment.repository.CommentRepository;
 import naughty.tuzamate.domain.comment.service.FCMService;
 import naughty.tuzamate.domain.notification.entity.Notification;
 import naughty.tuzamate.domain.notification.service.NotificationService;
+import naughty.tuzamate.domain.post.code.PostErrorCode;
 import naughty.tuzamate.domain.post.entity.Post;
 import naughty.tuzamate.domain.post.repository.PostRepository;
 import naughty.tuzamate.domain.user.entity.User;
@@ -38,7 +39,7 @@ public class CommentCommandServiceImpl implements CommentCommandService {
                 .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
+                .orElseThrow(() -> new CustomException(PostErrorCode.POST_NOT_FOUND));
 
         Comment parent = null;
 
