@@ -40,6 +40,7 @@ public class SecurityConfig {
             "/auth/kakao-oauth",
             "/signUp",
             "/login",
+            "/auth/kakao-login",
             "/auth/refresh"
     };
 

@@ -11,19 +11,19 @@ import naughty.tuzamate.domain.user.enums.SocialType;
 import naughty.tuzamate.domain.user.error.UserErrorCode;
 import naughty.tuzamate.domain.user.error.exception.UserCustomException;
 import naughty.tuzamate.domain.user.repository.UserRepository;
+import naughty.tuzamate.global.error.exception.CustomException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.Map;
 import java.util.Optional;
 
 @Service
@@ -85,7 +85,7 @@ public class OAuth2ServiceImpl implements OAuth2Service {
 
     }
 
-    private UserResponseDTO.UserTokenDTO loginAndSignUp(SocialType socialType, String email) {
+    public UserResponseDTO.UserTokenDTO loginAndSignUp(SocialType socialType, String email) {
 
         User user;
         Optional<User> userEmail = userRepository.findByEmail(email);
@@ -111,7 +111,7 @@ public class OAuth2ServiceImpl implements OAuth2Service {
                 .build();
     }
 
-    private KakaoOAuth2DTO.KakaoProfile getProfileFromKakao(String accessToken) {
+    public KakaoOAuth2DTO.KakaoProfile getProfileFromKakao(String accessToken) {
 
         // 액세스 토큰으로 사용자 정보를 가져온다
         RestTemplate restTemplate = new RestTemplate();
@@ -122,20 +122,25 @@ public class OAuth2ServiceImpl implements OAuth2Service {
 
         HttpEntity<MultiValueMap> request1 = new HttpEntity<>(httpHeaders);
 
-        ResponseEntity<String> response2 = restTemplate.exchange(
-                userInfoURI,
-                HttpMethod.GET,
-                request1,
-                String.class
-        );
-
-        ObjectMapper om = new ObjectMapper();
-
         try {
+            ResponseEntity<String> response2 = restTemplate.exchange(
+                    userInfoURI,
+                    HttpMethod.GET,
+                    request1,
+                    String.class
+            );
+
+            ObjectMapper om = new ObjectMapper();
+
             return om.readValue(response2.getBody(), KakaoOAuth2DTO.KakaoProfile.class);
-        } catch (Exception e) {
-            throw new UserCustomException(UserErrorCode.OAUTH_USER_INFO_FAIL);
+
         }
+        catch (HttpClientErrorException e) {
+             throw new UserCustomException(UserErrorCode.INVALID_OAUTH_TOKEN);
+         }
+         catch (Exception e) {
+             throw new CustomException(UserErrorCode.OAUTH_USER_INFO_FAIL);
+         }
     }
 
 
