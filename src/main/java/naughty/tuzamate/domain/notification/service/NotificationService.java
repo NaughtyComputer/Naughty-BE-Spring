@@ -1,6 +1,7 @@
 package naughty.tuzamate.domain.notification.service;
 
 import lombok.RequiredArgsConstructor;
+import naughty.tuzamate.domain.notification.code.NotificationErrorCode;
 import naughty.tuzamate.domain.notification.converter.NotificationConverter;
 import naughty.tuzamate.domain.notification.dto.NotificationResDTO;
 import naughty.tuzamate.domain.notification.entity.Notification;
@@ -58,7 +59,7 @@ public class NotificationService {
     // 단일 알림 조회(이미 읽은 알림을 다시 읽는 경우)
     public NotificationResDTO.toNotificationResDTO getNotification(Long notificationId, Long userId) {
         Notification notification =  notificationRepository.findByIdAndReceiverId(notificationId, userId)
-                .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
+                .orElseThrow(() -> new CustomException(NotificationErrorCode.NOTIFICATION_NOT_FOUND));
 
         return NotificationConverter.toNotificationDTO(notification);
     }
@@ -67,7 +68,7 @@ public class NotificationService {
     @Transactional
     public NotificationResDTO.toNotificationResDTO updateIsRead(Long notificationId, Long userId) {
         Notification notification = notificationRepository.findByIdAndReceiverId(notificationId, userId)
-                .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
+                .orElseThrow(() -> new CustomException(NotificationErrorCode.NOTIFICATION_NOT_FOUND));
 
         notification.updateIsRead();
 
@@ -77,7 +78,7 @@ public class NotificationService {
     @Transactional
     public void deleteNotification(Long notificationId, Long userId) {
         Notification notification = notificationRepository.findByIdAndReceiverId(notificationId, userId)
-                .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
+                .orElseThrow(() -> new CustomException(NotificationErrorCode.NOTIFICATION_NOT_FOUND));
 
         notificationRepository.delete(notification);
     }

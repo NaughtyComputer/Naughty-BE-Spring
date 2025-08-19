@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.constraints.Max;
 import lombok.RequiredArgsConstructor;
 import naughty.tuzamate.auth.principal.PrincipalDetails;
+import naughty.tuzamate.domain.post.code.PostSuccessCode;
 import naughty.tuzamate.domain.post.dto.PostReqDTO;
 import naughty.tuzamate.domain.post.dto.PostResDTO;
 import naughty.tuzamate.domain.post.entity.Post;
@@ -33,7 +34,7 @@ public class PostController {
     ) {
         PostResDTO.CreatePostResponseDTO resDTO = postCommandService.createPost(boardType, reqDTO, principalDetails);
 
-        return CustomResponse.onSuccess(GeneralSuccessCode.CREATED, resDTO);
+        return CustomResponse.onSuccess(PostSuccessCode.POST_CREATED, resDTO);
     }
 
     @GetMapping("/boards/{boardType}/posts/{postId}")
@@ -44,7 +45,7 @@ public class PostController {
     ) {
         PostResDTO.PostDTO resDTO = postQueryService.getPost(postId, principalDetails);
 
-        return CustomResponse.onSuccess(GeneralSuccessCode.OK, resDTO);
+        return CustomResponse.onSuccess(PostSuccessCode.POST_OK, resDTO);
     }
 
     @GetMapping("/boards/{boardType}/posts")
@@ -55,7 +56,7 @@ public class PostController {
             @RequestParam(defaultValue = "10") @Max(10) int size) {
         PostResDTO.PostPreviewListDTO resDTO = postQueryService.getPostList(boardType, cursor, size);
 
-        return CustomResponse.onSuccess(GeneralSuccessCode.OK, resDTO);
+        return CustomResponse.onSuccess(PostSuccessCode.POST_OK, resDTO);
     }
 
     @PatchMapping("/boards/{boardType}/posts/{postId}")
