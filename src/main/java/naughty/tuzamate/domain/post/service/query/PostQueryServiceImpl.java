@@ -32,6 +32,7 @@ public class PostQueryServiceImpl implements PostQueryService {
     private final PostScrapRepository postScrapRepository;
 
     @Override
+    @Transactional
     public PostResDTO.PostDTO getPost(Long postId, PrincipalDetails principalDetails) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(PostErrorCode.POST_NOT_FOUND));

@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 @Getter
 public enum NotificationErrorCode implements BaseErrorCode {
 
-    NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "NOTIFICATIONT404", "알림이 존재하지 않습니다."),;
+    NOTIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "NOTIFICATION404", "알림이 존재하지 않습니다."),;
 
     private final HttpStatus status;
     private final String code;
