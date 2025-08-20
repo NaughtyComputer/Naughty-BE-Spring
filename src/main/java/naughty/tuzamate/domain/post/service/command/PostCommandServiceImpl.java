@@ -2,6 +2,7 @@ package naughty.tuzamate.domain.post.service.command;
 
 import lombok.RequiredArgsConstructor;
 import naughty.tuzamate.auth.principal.PrincipalDetails;
+import naughty.tuzamate.domain.post.code.PostErrorCode;
 import naughty.tuzamate.domain.post.converter.PostConverter;
 import naughty.tuzamate.domain.post.dto.PostReqDTO;
 import naughty.tuzamate.domain.post.dto.PostResDTO;
@@ -46,7 +47,7 @@ public class PostCommandServiceImpl implements PostCommandService {
     ) {
         // reqDTO -> Post Entity, Post Entity -> resDTO
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
+                .orElseThrow(() -> new CustomException(PostErrorCode.POST_NOT_FOUND));
 
         if (!post.getUser().getId().equals(principalDetails.getUser().getId())) {
             throw new CustomException(GeneralErrorCode.FORBIDDEN_403); // 권한 없음
@@ -65,7 +66,7 @@ public class PostCommandServiceImpl implements PostCommandService {
     @Override
     public PostResDTO.DeletePostResponseDTO deletePost(Long postId, PrincipalDetails principalDetails) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
+                .orElseThrow(() -> new CustomException(PostErrorCode.POST_NOT_FOUND));
 
         if (!post.getUser().getId().equals(principalDetails.getUser().getId())) {
             throw new CustomException(GeneralErrorCode.FORBIDDEN_403); // 권한 없음
@@ -79,7 +80,7 @@ public class PostCommandServiceImpl implements PostCommandService {
     @Override
     public String postLike(Long postId, PrincipalDetails principalDetails) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
+                .orElseThrow(() -> new CustomException(PostErrorCode.POST_NOT_FOUND));
         User user = userRepository.findById(principalDetails.getId())
                 .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
 
@@ -102,7 +103,7 @@ public class PostCommandServiceImpl implements PostCommandService {
     @Override
     public String deleteLike(Long postId, PrincipalDetails principalDetails) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
+                .orElseThrow(() -> new CustomException(PostErrorCode.POST_NOT_FOUND));
         User user = userRepository.findById(principalDetails.getId())
                 .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
 
@@ -117,7 +118,7 @@ public class PostCommandServiceImpl implements PostCommandService {
     @Override
     public String postScrap(Long postId, PrincipalDetails principalDetails) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
+                .orElseThrow(() -> new CustomException(PostErrorCode.POST_NOT_FOUND));
         User user = userRepository.findById(principalDetails.getId())
                 .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
 
@@ -134,7 +135,7 @@ public class PostCommandServiceImpl implements PostCommandService {
     @Override
     public String deleteScrap(Long postId, PrincipalDetails principalDetails) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
+                .orElseThrow(() -> new CustomException(PostErrorCode.POST_NOT_FOUND));
         User user = userRepository.findById(principalDetails.getId())
                 .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
 

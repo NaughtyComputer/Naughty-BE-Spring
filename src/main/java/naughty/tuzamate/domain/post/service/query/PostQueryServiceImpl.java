@@ -2,6 +2,7 @@ package naughty.tuzamate.domain.post.service.query;
 
 import lombok.RequiredArgsConstructor;
 import naughty.tuzamate.auth.principal.PrincipalDetails;
+import naughty.tuzamate.domain.post.code.PostErrorCode;
 import naughty.tuzamate.domain.post.converter.PostConverter;
 import naughty.tuzamate.domain.post.dto.PostResDTO;
 import naughty.tuzamate.domain.post.entity.Post;
@@ -31,9 +32,10 @@ public class PostQueryServiceImpl implements PostQueryService {
     private final PostScrapRepository postScrapRepository;
 
     @Override
+    @Transactional
     public PostResDTO.PostDTO getPost(Long postId, PrincipalDetails principalDetails) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
+                .orElseThrow(() -> new CustomException(PostErrorCode.POST_NOT_FOUND));
 
         if (!post.isRead()) {
             post.setIsRead();

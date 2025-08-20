@@ -2,6 +2,7 @@ package naughty.tuzamate.domain.comment.service.command;
 
 import lombok.RequiredArgsConstructor;
 import naughty.tuzamate.auth.principal.PrincipalDetails;
+import naughty.tuzamate.domain.comment.code.CommentErrorCode;
 import naughty.tuzamate.domain.comment.converter.CommentConverter;
 import naughty.tuzamate.domain.comment.dto.CommentReqDTO;
 import naughty.tuzamate.domain.comment.dto.CommentResDTO;
@@ -10,6 +11,7 @@ import naughty.tuzamate.domain.comment.repository.CommentRepository;
 import naughty.tuzamate.domain.comment.service.FCMService;
 import naughty.tuzamate.domain.notification.entity.Notification;
 import naughty.tuzamate.domain.notification.service.NotificationService;
+import naughty.tuzamate.domain.post.code.PostErrorCode;
 import naughty.tuzamate.domain.post.entity.Post;
 import naughty.tuzamate.domain.post.repository.PostRepository;
 import naughty.tuzamate.domain.user.entity.User;
@@ -35,16 +37,16 @@ public class CommentCommandServiceImpl implements CommentCommandService {
             CommentReqDTO.CreateCommentRequestDTO reqDTO, Long postId, PrincipalDetails principalDetails
     ) {
         User commentWriter = userRepository.findById(principalDetails.getId())
-                .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
+                .orElseThrow(() -> new CustomException(CommentErrorCode.COMMENT_NOT_FOUND));
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
+                .orElseThrow(() -> new CustomException(PostErrorCode.POST_NOT_FOUND));
 
         Comment parent = null;
 
         if (reqDTO.parentId() != null) {
             parent = commentRepository.findById(reqDTO.parentId())
-                    .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
+                    .orElseThrow(() -> new CustomException(CommentErrorCode.COMMENT_NOT_FOUND));
         }
 
         Comment comment = CommentConverter.toComment(reqDTO, commentWriter, post, parent);
@@ -99,7 +101,7 @@ public class CommentCommandServiceImpl implements CommentCommandService {
             PrincipalDetails principalDetails
     ) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
+                .orElseThrow(() -> new CustomException(CommentErrorCode.COMMENT_NOT_FOUND));
 
         if (!comment.getUser().getId().equals(principalDetails.getUser().getId())) {
             throw new CustomException(GeneralErrorCode.FORBIDDEN_403); // 권한 없음
@@ -113,7 +115,7 @@ public class CommentCommandServiceImpl implements CommentCommandService {
     @Override
     public CommentResDTO.DeleteCommentResponseDTO deleteComment(Long commentId, PrincipalDetails principalDetails) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
+                .orElseThrow(() -> new CustomException(CommentErrorCode.COMMENT_NOT_FOUND));
 
         if (!comment.getUser().getId().equals(principalDetails.getUser().getId())) {
             throw new CustomException(GeneralErrorCode.FORBIDDEN_403);
