@@ -11,8 +11,13 @@ import naughty.tuzamate.domain.user.error.UserErrorCode;
 import naughty.tuzamate.domain.user.error.exception.UserCustomException;
 import naughty.tuzamate.domain.user.repository.UserRepository;
 import naughty.tuzamate.global.error.exception.CustomException;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.Instant;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -22,6 +27,7 @@ public class AuthService {
     private final RefreshTokenRepository refreshTokenRepository;
     private final UserRepository userRepository;
     private final JwtProvider jwtProvider;
+    private final StringRedisTemplate redisTemplate;
 
     /**
      * user의 tokenVersion을 1 증가시킨다. -> 기존 토큰을 무효화 시킨다
@@ -56,19 +62,22 @@ public class AuthService {
             throw new CustomException(UserErrorCode.LOGGED_OUT_USER); // 의도적으로 토큰을 더 이상 신뢰하지 않는지 확인
         }
 
-        RefreshToken storedToken = refreshTokenRepository.findById(userId).orElseThrow(
-                () -> new CustomException(JwtErrorCode.TOKEN_INVALID));
+        String storedRefreshToken = redisTemplate.opsForValue().get("refreshToken:" + userId);
 
-        // 기존 리플레쉬 토큰을 재사용하지 못하도록 한다. (if문의 다음 코드를 사용하지 못하게)
-        if (!storedToken.getToken().equals(token)) { // 폐기된 토큰을 재사용 -> 탈취된 것
-            refreshTokenRepository.deleteById(userId);
+
+        if (storedRefreshToken == null || !storedRefreshToken.equals(token)) {
             throw new CustomException(JwtErrorCode.TOKEN_INVALID); // 저장된 토큰과 일치하지 않으면 예외 발생
         }
 
         String newAccessToken = jwtProvider.createAccessToken(user);
         String newRefreshToken = jwtProvider.createRefreshToken(user);
 
-        storedToken.update(newRefreshToken);
+        redisTemplate.opsForValue().set(
+                "refreshToken:" + userId,
+                newRefreshToken,
+                jwtProvider.getRefreshExpiration(),
+                TimeUnit.MILLISECONDS
+        );
 
         return new TokenResponse.TokenDto(newAccessToken, newRefreshToken);
 
