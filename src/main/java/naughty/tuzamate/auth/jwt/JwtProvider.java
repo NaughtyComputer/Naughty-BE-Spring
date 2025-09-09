@@ -1,6 +1,7 @@
 package naughty.tuzamate.auth.jwt;
 
 import io.jsonwebtoken.*;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,7 @@ public class JwtProvider {
 
     // @Value: yml에서 해당 값을 가져오기 (아래의 YML의 값을 가져올 수 있음)
     public JwtProvider(@Value("${JWT_SECRET}") String secret, @Value("${ACCESS_EXPIRATION}") long accessExpiration, @Value("${REFRESH_EXPIRATION}") long refreshExpiration) {
-        this.secret = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8)); // 가져온 문자열로 SecretKey 생성
+        this.secret = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(secret));
         this.accessExpiration = accessExpiration;
         this.refreshExpiration = refreshExpiration;
     }
@@ -73,10 +74,11 @@ public class JwtProvider {
     public Jws<Claims> getClaims(String token) {
         try {
             return Jwts.parser() // parsing 하기 위해 builder를 가져옴
-                    .setSigningKey(secret) // sign key 설정
+                    .verifyWith(secret) // sign key 설정
                     .build()
-                    .parseClaimsJws(token); // claim 가져오기
+                    .parseSignedClaims(token); // claim 가져오기
         } catch (Exception e) { // parsing하는 과정에서 sign key가 틀리는 등의 이유로 일어나는 Exception
+            log.info(e.getMessage());
             throw new AuthException(JwtErrorCode.TOKEN_INVALID);
         }
     }
