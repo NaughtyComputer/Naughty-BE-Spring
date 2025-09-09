@@ -16,4 +16,13 @@ public class TokenResponse {
         }
     }
 
+    @Getter
+    public static class AccessTokenDto {
+        private final String accessToken;
+
+        public AccessTokenDto(String newAccessToken) {
+            this.accessToken = newAccessToken;
+        }
+    }
+
 }
