@@ -32,6 +32,15 @@ public class RefreshTokenService {
 
         String key = "refreshToken:" + userId;
         Duration ttl = Duration.between(LocalDateTime.now(), expire);
+
+        if (ttl.isNegative() || ttl.isZero()) {
+
+            log.warn("만료 시간이 현재 시간보다 이전이거나 같습니다. 토큰을 저장하지 않습니다.");
+            log.warn("skip saving refreshToken : non-positive ttl. userId = {}, expire = {}", userId, expire);
+
+            throw new IllegalArgumentException("만료 시간이 이미 지났습니다.");
+        }
+
         valueOperations.set(key, token, ttl);
     }
 
