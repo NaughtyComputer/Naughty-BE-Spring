@@ -74,12 +74,4 @@ public class UserServiceImpl implements UserService{
                 .refreshToken(jwtProvider.createRefreshToken(newUser))
                 .build();
     }
-
-    @Override
-    public void updateFcmToken(Long userId, String token) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new CustomException(GeneralErrorCode.NOT_FOUND_404));
-
-        user.updateFcmToken(token);
-    }
 }

@@ -48,14 +48,4 @@ public class UserController {
         UserResponseDTO.UserTokenDTO signUpResult = userService.signUp(signUpDTO);
         return CustomResponse.onSuccess(signUpResult);
     }
-
-    @PostMapping("/users/fcm-token")
-    @Operation(summary = "fcm 토큰 발급받아 저장하는 api",
-            description = "프론트에서 로그인 및 회원가입시 FCM 토큰을 발행하여 이 api로 토큰을 전송하면 DB에 저장 및 업데이트")
-    public CustomResponse<?> saveFcmToken(@AuthenticationPrincipal PrincipalDetails principal,
-                                          @RequestBody FcmRequestDTO token) {
-        userService.updateFcmToken(principal.getUser().getId(), token.getToken());
-
-        return CustomResponse.onSuccess(GeneralSuccessCode.OK);
-    }
 }

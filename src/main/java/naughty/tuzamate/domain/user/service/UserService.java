@@ -9,5 +9,4 @@ public interface UserService {
 
     UserResponseDTO.UserTokenDTO signUp(UserRequestDTO.UserSignUpDTO signUpDTO);
 
-    void updateFcmToken(Long userId, String token);
 }
