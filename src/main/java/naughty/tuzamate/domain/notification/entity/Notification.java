@@ -14,19 +14,23 @@ import naughty.tuzamate.global.BaseTimeEntity;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Table(indexes = {
+        @Index(name="idx_notification_receiver_id_id_desc", columnList = "receiver_id,id")
+})
 public class Notification extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
+    @Column(nullable = false)
     private String title;
 
-    @NotBlank
+    @Column(nullable = false)
     private String content;
 
-    private boolean isRead;
+    @Builder.Default
+    private boolean isRead = false;;
 
     @Column(name = "target_id")
     private Long targetId; // 관련 postId
@@ -35,8 +39,8 @@ public class Notification extends BaseTimeEntity {
     @JoinColumn(name = "receiver_id")
     private User receiver;
 
-    public void updateIsRead() {
-        this.isRead = !isRead;
-    }
+    public void markAsRead()   { this.isRead = true; }
+
+    public void markAsUnread() { this.isRead = false; }
 }
 
