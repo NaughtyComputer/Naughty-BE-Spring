@@ -1,6 +1,7 @@
 package naughty.tuzamate.domain.pushToken.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
 import naughty.tuzamate.domain.pushToken.enums.Platform;
@@ -10,12 +11,10 @@ public class PushTokenReqDTO {
 
     @Builder
     public record RegisterPushTokenReqDTO(
-            Long userId,
-
             @NotBlank
             String token,
 
-            @NotBlank
+            @NotNull
             Platform platform,
 
             @NotBlank

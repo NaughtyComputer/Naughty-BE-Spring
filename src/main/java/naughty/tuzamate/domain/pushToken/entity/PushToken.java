@@ -26,7 +26,7 @@ public class PushToken extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     private Long userId;
 
     @Column(nullable = false, length = 2048)
@@ -41,7 +41,7 @@ public class PushToken extends BaseTimeEntity {
     // logout 시 false -> 재 로그인 시 true 재 변경
     @Builder.Default
     @Column(nullable = false)
-    private Boolean isActive = true;
+    private Boolean isActive = false;
 
     // 앱을 실행할 때마다 업데이트가 되게 하기(프론트에서 해야 할 듯)
     private LocalDateTime lastSeenAt;
