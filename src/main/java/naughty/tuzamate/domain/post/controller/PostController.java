@@ -37,7 +37,7 @@ public class PostController {
         return CustomResponse.onSuccess(PostSuccessCode.POST_CREATED, resDTO);
     }
 
-    @GetMapping("/boards/{boardType}/posts/{postId}")
+    @GetMapping("/boards/posts/{postId}")
     @Operation(summary = "단일 게시글 조회", description = "단일 게시글을 조회합니다.")
     public CustomResponse<PostResDTO.PostDTO> getPost(
             @PathVariable Long postId,
@@ -59,7 +59,7 @@ public class PostController {
         return CustomResponse.onSuccess(PostSuccessCode.POST_OK, resDTO);
     }
 
-    @PatchMapping("/boards/{boardType}/posts/{postId}")
+    @PatchMapping("/boards/posts/{postId}")
     @Operation(summary = "게시글 수정", description = "게시글을 수정합니다.")
     public CustomResponse<PostResDTO.UpdatePostResponseDTO> updatePost(
             @PathVariable Long postId,
@@ -71,7 +71,7 @@ public class PostController {
         return CustomResponse.onSuccess(GeneralSuccessCode.OK, resDTO);
     }
 
-    @DeleteMapping("/boards/{boardType}/posts/{postId}")
+    @DeleteMapping("/boards/posts/{postId}")
     @Operation(summary = "게시글 삭제", description = "게시글을 삭제합니다.")
     public CustomResponse<PostResDTO.DeletePostResponseDTO> deletePost(
             @PathVariable Long postId,

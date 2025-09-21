@@ -8,7 +8,6 @@ import naughty.tuzamate.domain.comment.dto.CommentReqDTO;
 import naughty.tuzamate.domain.comment.dto.CommentResDTO;
 import naughty.tuzamate.domain.comment.entity.Comment;
 import naughty.tuzamate.domain.comment.repository.CommentRepository;
-import naughty.tuzamate.domain.comment.service.FCMService;
 import naughty.tuzamate.domain.notification.entity.Notification;
 import naughty.tuzamate.domain.notification.service.NotificationService;
 import naughty.tuzamate.domain.post.code.PostErrorCode;
@@ -21,6 +20,10 @@ import naughty.tuzamate.global.error.exception.CustomException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.Set;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -29,7 +32,6 @@ public class CommentCommandServiceImpl implements CommentCommandService {
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
-    private final FCMService fcmService;
     private final NotificationService notificationService;
 
     @Override
@@ -53,42 +55,42 @@ public class CommentCommandServiceImpl implements CommentCommandService {
 
         commentRepository.save(comment);
 
-        // 알림 제공 서비스
-        User postWriter = post.getUser();
-        User parentWriter = parent != null ? parent.getUser() : null;
+        // 알림 대상 계산
+        Set<Long> receivers = new LinkedHashSet<>();
 
-        String content = comment.getContent();
-        String preview = (content != null && content.length() >= 15) ? content.substring(0, 15) + "..." : (content != null ? content : "");
-        String title = commentWriter.getNickname() + "님이 댓글을 남겼습니다.";
+        Long postWriterId = post.getUser().getId();
+        Long parentWriterId = parent != null ? parent.getUser().getId() : null;
+        Long writerId = commentWriter.getId();
 
-        // 게시글 작성자가 아닌 사용자가 댓글을 단 경우
-        if (parent == null && !postWriter.getId().equals(commentWriter.getId())) {
-            fcmService.sendNotification(title, preview, postWriter.getFcmToken());
-
-            Notification notification = Notification.builder()
-                    .title(title)
-                    .content(preview)
-                    .isRead(false)
-                    .targetId(postId)
-                    .receiver(postWriter)
-                    .build();
-
-            notificationService.saveNotification(notification);
+        if (!postWriterId.equals(writerId)) {
+            receivers.add(postWriterId);
+        }
+        if (parentWriterId != null && !parentWriterId.equals(writerId) && !parentWriterId.equals(postWriterId)) {
+            receivers.add(parentWriterId);
         }
 
-        // 댓글 작성자에게 대댓글이 달린 경우(부모 댓글 작성자와 대댓글 작성자가 다른 경우)
-        if (parent != null && !parentWriter.getId().equals(commentWriter.getId())) {
-            fcmService.sendNotification(title, preview, parentWriter.getFcmToken());
-
+        // 알림 저장 + (커밋 후) FCM 발송
+        for (Long receiverId : receivers) {
             Notification notification = Notification.builder()
-                    .title(title)
-                    .content(preview)
+                    .receiver(User.builder().id(receiverId).build())
+                    .title("새 댓글이 달렸습니다")
+                    .content(comment.getContent())
+                    .targetId(post.getId())
                     .isRead(false)
-                    .targetId(postId)
-                    .receiver(parentWriter)
                     .build();
 
-            notificationService.saveNotification(notification);
+            Map<String, String> data = Map.of(
+                    "type", "COMMENT",
+                    "postId", String.valueOf(post.getId()),
+                    "commentId", String.valueOf(comment.getId()),
+                    "deeplink", "myapp://post/" + post.getId() + "?commentId=" + comment.getId()
+            );
+
+            notificationService.saveAndDispatch(
+                    notification, receiverId,
+                    "새 댓글 알림", comment.getContent(),
+                    data, true, "OPEN_POST" // 클릭 액션 키(프론트에 맞추기)
+            );
         }
 
         return CommentConverter.toCreateCommentResponseDTO(comment);
