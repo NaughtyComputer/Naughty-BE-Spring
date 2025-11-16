@@ -20,13 +20,13 @@ Java17, Spring Boot, MySQL, AWS EC2, Nginx, Docker, Redis, JPA, Spring Security,
 
 ## 아키텍처 구조
 ### 스프링 백엔드 아키텍처
-![img.png](img.png)
+![img.png](images/img.png)
 
 ### 전체 아키텍처
-![img_2.png](img_2.png)
+![img_2.png](images/img_2.png)
 
 ## 전체 시스템 흐름도
-![img_1.png](img_1.png)
+![img_1.png](images/img_1.png)
 
 ## 다른 파트 github 링크
 - 안드로이드 : https://github.com/NaughtyComputer/Naughty-FE-Android-v2
